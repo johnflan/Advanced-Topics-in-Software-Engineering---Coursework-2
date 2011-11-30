@@ -1,0 +1,74 @@
+\documentclass[pdftex,11pt,a4paper]{article}
+\usepackage{anysize}
+\marginsize{2.4cm}{2.4cm}{1.4cm}{1.4cm}
+\usepackage[pdftex]{graphicx}
+\usepackage{wrapfig}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{textcomp}
+
+\lstset{
+	backgroundcolor=\color{lbcolor},
+	tabsize=2,
+	language=java,
+	numbers=left,
+	numbersep=5pt,
+        basicstyle=\scriptsize,
+        upquote=true,
+        aboveskip={1.5\baselineskip},
+        columns=fixed,
+        showstringspaces=false,
+        extendedchars=true,
+        breaklines=true,
+        prebreak = \raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
+        showtabs=false,
+        showspaces=false,
+        showstringspaces=false,
+        identifierstyle=\ttfamily,
+        keywordstyle=\color[rgb]{0,0,1},
+        commentstyle=\color[rgb]{0.133,0.545,0.133},
+        stringstyle=\color[rgb]{0.627,0.126,0.941},
+}
+
+
+
+\definecolor{listinggray}{gray}{0.9}
+\definecolor{lbcolor}{rgb}{0.9,0.9,0.9}
+\linespread{1.2}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1ex plus 0.8ex minus 0.2ex}
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\lhead{\footnotesize {Advanced Topics in Software Engineering - Coursework 2} }
+\rhead{\footnotesize {} }
+
+\renewcommand\headheight{24pt}
+\renewcommand\footrulewidth{0.4pt}
+
+\clearpage
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\author{John \textsc{Flanagan} jf311 }
+\title{TITLE GOES HERE}
+\date{\today}
+
+\begin{document}
+begining of doc
+
+\subsection*{UDP}
+
+\subsubsection*{RIM client/server}
+\begin{center}
+	\includegraphics[scale=0.5]{rmi_client.png}
+\end{center}
+
+\pagebreak
+\section*{Project source code}
+\subsection*{UDP Client}
+\lstinputlisting{code/udp/UDPClient.java}
+
+
+\end{document}
