@@ -1,0 +1,98 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Billing System</h1>
+
+    <p>
+    	Set peak rate cost to <span concordion:set="#peakRate">0.10</span> and peak rate begins at <span concordion:set="#peakTime">07:00</span>
+    	Set off-peak rate to <span concordion:set="#offPeakRate">0.05</span> and off-peak rate begins at <span concordion:set="#offPeakTime">19:00</span>
+    	
+    	<span concordion:execute="setPeakRate(#peakRate)" />
+    	<span concordion:execute="setPeakTime(#peakTime)" />
+    	
+    	<span concordion:execute="setOffPeakRate(#offPeakRate)" />
+    	<span concordion:execute="setOffPeakTime(#offPeakTime)" />
+    	
+    </p>
+    <p>	
+    	Given a <span>BillingSystem</span>, with the following customers:
+    
+	    <table concordion:execute="createCustomer(#name, #number, #plan)">
+			<tr>
+				<th concordion:set="#name">Customer Name</th>
+				<th concordion:set="#plan">Price plan</th>
+				<th concordion:set="#number">Number</th>
+			</tr>
+			<tr>
+				<td>James Jones</td>
+				<td>Business</td>
+				<td>447000000001</td>
+			</tr>
+			<tr>
+				<td>Ita Isaacson</td>
+				<td>Standard</td>
+				<td>447000000002</td>
+			</tr>
+			<tr>
+				<td>Gilles Gildea</td>
+				<td>Leisure</td>
+				<td>447000000003</td>
+			</tr>
+		</table>
+	</p>
+	<p>
+		Given the following phone calls:
+		<table concordion:execute="createCallEntry(#fromNo, #toNo, #startTime, #duration, #description, #cost)">
+			<tr>
+				<th concordion:set="#fromNo">From Number</th>
+				<th concordion:set="#toNo">To Number</th>
+				<th concordion:set="#startTime">Start time</th>
+				<th concordion:set="#duration">Duration (min)</th>
+				<th concordion:set="#description">Description</th>
+				<th concordion:set="#cost">Projected Cost</th>
+			</tr>
+			<tr>
+				<td>47000000001</td>
+				<td>47000000002</td>
+				<td>03:00</td>
+				<td>30</td>
+				<td>Off-peak rate call</td>
+				<td>1.50</td>
+			</tr>
+			<tr>
+				<td>47000000002</td>
+				<td>47000000003</td>
+				<td>03:00</td>
+				<td>4</td>
+				<td>Peak rate call</td>
+				<td>0.40</td>
+			</tr>
+			<tr>
+				<td>47000000003</td>
+				<td>47000000001</td>
+				<td>06:55</td>
+				<td>15</td>
+				<td>Off-peak to peak rate call</td>
+				<td>1.25</td>
+			</tr>
+			<tr><td>47000000001</td><td>47000000002</td><td>18:49</td><td>45</td><td>Peak to off-peak rate call</td><td>2.80</td></tr>
+			<tr><td>47000000002</td><td>47000000003</td><td>00:01</td><td>1380</td><td>Off-peak to peak to off-peak rate call</td><td>105.00</td></tr>
+		</table>
+	</p>
+	<p>
+		Customer Bill Total
+		 <table concordion:execute="#totalCost = getTotalCostsFor(#telNumber)">
+			<tr>
+				<th>Customer Name</th>
+				<th concordion:set="#telNumber">Number</th>
+				<th concordion:assertEquals="#totalCost">Total</th>
+			</tr>
+			<tr><td>James Jones</td><td>447000000001</td><td>4.30</td></tr>
+			<tr><td>Ita Isaacson</td><td>447000000002</td><td>105.40</td></tr>
+			<tr><td>Gilles Gildea</td><td>447000000003</td><td>1.25</td></tr>
+		</table>
+	</p>
+
+</body>
+</html>
