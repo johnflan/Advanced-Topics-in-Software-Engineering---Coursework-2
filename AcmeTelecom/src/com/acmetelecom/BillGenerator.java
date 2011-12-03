@@ -4,19 +4,9 @@ import com.acmetelecom.customer.Customer;
 
 import java.util.List;
 
-class BillGenerator implements BillGenerInterface{
+public class BillGenerator {
 
-	
-	private static BillGenerInterface instance = new BillGenerator();
-
-    private BillGenerator() {
-	    }
-    
-	public static BillGenerInterface getInstance() {
-        return instance;
-    }
-	
-	public void send(Customer customer, List<BillingSystem.LineItem> calls, String totalBill) {
+    public void send(Customer customer, List<BillingSystem.LineItem> calls, String totalBill) {
 
         Printer printer = HtmlPrinter.getInstance();
         printer.printHeading(customer.getFullName(), customer.getPhoneNumber(), customer.getPricePlan());
