@@ -8,15 +8,17 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class Call {
-    private CallEvent start;
-    private CallEvent end;
+public class Call implements iCall{
 
-    public Call(CallEvent start, CallEvent end) {
+    private iCallStart start;
+    private iCallEnd end;
+
+    public Call(iCallStart start, iCallEnd end) {
         this.start = start;
         this.end = end;
     }
-
+    
+    
     public String callee() {
         return start.getCallee();
     }
