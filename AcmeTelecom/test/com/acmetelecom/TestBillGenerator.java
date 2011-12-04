@@ -13,7 +13,7 @@ public class TestBillGenerator implements iBillGenerator {
 	private Map<Customer, String> totalForCustomer;
 
 	@Override
-	public void send(Customer customer, List<LineItem> calls, String totalBill) {
+	public void send(Customer customer, List<LineItem> calls, String totalBill, Printer printer) {
 		
 		if (totalForCustomer == null)
 			totalForCustomer = new HashMap<Customer, String>();
