@@ -1,11 +1,6 @@
 package com.acmetelecom;
 
 import static org.junit.Assert.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import junit.framework.TestCase;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.jmock.*;
@@ -35,36 +30,42 @@ public class CallTest{
 		durationSeconds = (millisEnd - millisStart) / 1000;
 	}
 	
+	//Checks the call class methods for duration and time
 	@Test
 	public void callDurationAndTimeTests() {
 		
 		context.checking(new Expectations() {{
-			allowing (callStart).time(); will(returnValue(millisStart));
-			allowing (callEnd).time(); will(returnValue(millisEnd));
+			oneOf (callStart).time(); will(returnValue(millisStart));
+			oneOf (callEnd).time(); will(returnValue(millisEnd));
 		}});
 		
 		assertEquals(durationSeconds, call.durationSeconds());
 	}
 	
+	//Checks the name of the callee
 	@Test
 	public void calleeNameTest(){
 		
 		context.checking(new Expectations() {{
-			allowing (callStart).getCallee(); will(returnValue("CalleeName"));
+			oneOf (callStart).getCallee(); will(returnValue("CalleeName"));
 		}});
 		
 		assertEquals("CalleeName",call.callee());
 	}
 	
+	//Checks the format of the start date that the call returns
 	@Test
 	public void dateFormatTest(){
 		
 		context.checking(new Expectations(){{
-			allowing (callStart).time(); will(returnValue(millisStart));
+			oneOf (callStart).time(); will(returnValue(millisStart));
 		}});
 		
-		assertEquals("01/01/11 00:00", call.date());
-		assertFalse(call.date().equals("00:00 01/01/11"));
-		assertFalse(call.date().equals("1/1/11 00:00"));
+		String realFormat = call.date();
+		
+		assertEquals("01/01/11 00:00", realFormat);
+		assertFalse(realFormat.equals("00:00 01/01/11"));
+		assertFalse(realFormat.equals("1/1/11 00:00"));
 	}
+	
 }
