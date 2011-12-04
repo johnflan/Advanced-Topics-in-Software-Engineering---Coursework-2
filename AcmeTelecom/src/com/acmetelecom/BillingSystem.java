@@ -30,7 +30,7 @@ public class BillingSystem {
     	this.billGenerator = billGen;
     }
     
-    public List getCallLog(){
+    public List<CallEvent> getCallLog(){
     	return callLog;
     }
     

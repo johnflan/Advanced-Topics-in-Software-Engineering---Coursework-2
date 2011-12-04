@@ -16,8 +16,8 @@ public class Runner {
 		sleepSeconds(6);
 		billingSystem.callCompleted("447777765432", "447711111111");
 		billingSystem.createCustomerBills();
-		}
-		private static void sleepSeconds(int n) throws InterruptedException {
+	}
+	private static void sleepSeconds(int n) throws InterruptedException {
 		Thread.sleep(n * 1000);
-		}
+	}
 }

@@ -6,11 +6,12 @@ import java.util.Date;
 
 import org.junit.Test;
 
-
+@SuppressWarnings("deprecation")
 public class DatetimePeakPeriodTest {
 	DaytimePeakPeriod dtpp = new DaytimePeakPeriod();
 	Date time;
 	
+	//Checks if the off peak period is changed at 07:00
 	@Test
 	public void testPeakChangeAtSevenAM() {
 		time = new Date(111,10,26,6,59,59);
@@ -20,6 +21,7 @@ public class DatetimePeakPeriodTest {
 		assertFalse("7:00:00am is OffPeak", dtpp.offPeak(time));
 	}
 	
+	//Checks if the peak period is changed at 19:00
 	@Test
 	public void testPeakChangeAtSevenPM() {
 		time = new Date(111,10,26,18,59,59);
@@ -29,6 +31,7 @@ public class DatetimePeakPeriodTest {
 		assertTrue("7:00:00pm is Peak", dtpp.offPeak(time));
 	}
 	
+	//Checks different peak and off peak periods
 	@Test
 	public void testPeakAndOffPeakTimes() {
 		time = new Date(111,10,26,3,0,0);
