@@ -5,18 +5,11 @@
     <h1>Billing System</h1>
 
     <p>
-    	Set peak rate cost to <span concordion:set="#peakRate">0.10</span> and peak rate begins at <span concordion:set="#peakTime">07:00</span>
-    	Set off-peak rate to <span concordion:set="#offPeakRate">0.05</span> and off-peak rate begins at <span concordion:set="#offPeakTime">19:00</span>
-    	
-    	<span concordion:execute="setPeakRate(#peakRate)" />
-    	<span concordion:execute="setPeakTime(#peakTime)" />
-    	
-    	<span concordion:execute="setOffPeakRate(#offPeakRate)" />
-    	<span concordion:execute="setOffPeakTime(#offPeakTime)" />
+    	Set the tariff to <span concordion:execute="initialiseStandardTariff()">Standard</span>. The peak tariff <span concordion:assertEquals="getPeakTariff()">£0.50</span> and the off-peak tariff is <span concordion:assertEquals="getOffPeakTariff()">£0.20</span>
     	
     </p>
     <p>	
-    	Given a <span>BillingSystem</span>, with the following customers:
+    	Create a list of the following customers:
     
 	    <table concordion:execute="createCustomer(#name, #number, #plan)">
 			<tr>
@@ -41,56 +34,80 @@
 			</tr>
 		</table>
 	</p>
+	
+	<p>
+	Create a <span concordion:execute="initialiseBillingSystem()">BillingSystem</span>, with the customerList.
+	</p>
 	<p>
 		Given the following phone calls:
-		<table concordion:execute="createCallEntry(#fromNo, #toNo, #startTime, #duration, #description, #cost)">
+		<table concordion:execute="createCallEntry(#fromNo, #toNo, #startTime, #duration)">
 			<tr>
 				<th concordion:set="#fromNo">From Number</th>
 				<th concordion:set="#toNo">To Number</th>
 				<th concordion:set="#startTime">Start time</th>
 				<th concordion:set="#duration">Duration (min)</th>
 				<th concordion:set="#description">Description</th>
-				<th concordion:set="#cost">Projected Cost</th>
 			</tr>
 			<tr>
-				<td>47000000001</td>
-				<td>47000000002</td>
+				<td>447000000001</td>
+				<td>447000000002</td>
 				<td>03:00</td>
 				<td>30</td>
 				<td>Off-peak rate call</td>
-				<td>1.50</td>
 			</tr>
 			<tr>
-				<td>47000000002</td>
-				<td>47000000003</td>
+				<td>447000000002</td>
+				<td>447000000003</td>
 				<td>03:00</td>
 				<td>4</td>
 				<td>Peak rate call</td>
-				<td>0.40</td>
 			</tr>
 			<tr>
-				<td>47000000003</td>
-				<td>47000000001</td>
+				<td>447000000003</td>
+				<td>447000000001</td>
 				<td>06:55</td>
 				<td>15</td>
 				<td>Off-peak to peak rate call</td>
-				<td>1.25</td>
 			</tr>
-			<tr><td>47000000001</td><td>47000000002</td><td>18:49</td><td>45</td><td>Peak to off-peak rate call</td><td>2.80</td></tr>
-			<tr><td>47000000002</td><td>47000000003</td><td>00:01</td><td>1380</td><td>Off-peak to peak to off-peak rate call</td><td>105.00</td></tr>
+			<tr>
+				<td>447000000001</td>
+				<td>447000000002</td>
+				<td>18:49</td>
+				<td>45</td>
+				<td>Peak to off-peak rate call</td>
+			</tr>
+			<tr>
+				<td>447000000002</td>
+				<td>447000000003</td>
+				<td>00:01</td>
+				<td>1380</td>
+				<td>Off-peak to peak to off-peak rate call</td>
+			</tr>
 		</table>
 	</p>
 	<p>
-		Customer Bill Total
-		 <table concordion:execute="#totalCost = getTotalCostsFor(#telNumber)">
+		<span concordion:execute="calculateCallTotals()">Calculate totals</span> for each customer.
+		 <table concordion:execute="#totalCost = getTotalCostsFor(#custName, #telNumber)">
 			<tr>
-				<th>Customer Name</th>
+				<th concordion:set="#custName">Customer Name</th>
 				<th concordion:set="#telNumber">Number</th>
 				<th concordion:assertEquals="#totalCost">Total</th>
 			</tr>
-			<tr><td>James Jones</td><td>447000000001</td><td>4.30</td></tr>
-			<tr><td>Ita Isaacson</td><td>447000000002</td><td>105.40</td></tr>
-			<tr><td>Gilles Gildea</td><td>447000000003</td><td>1.25</td></tr>
+			<tr>
+				<td>James Jones</td>
+				<td>447000000001</td>
+				<td>9.00</td>
+			</tr>
+			<tr>
+				<td>Ita Isaacson</td>
+				<td>447000000002</td>
+				<td>414.48</td>
+			</tr>
+			<tr>
+				<td>Gilles Gildea</td>
+				<td>447000000003</td>
+				<td>4.50</td>
+			</tr>
 		</table>
 	</p>
 

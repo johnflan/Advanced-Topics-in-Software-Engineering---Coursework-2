@@ -41,9 +41,17 @@ public class BillingSystem {
     public void callInitiated(String caller, String callee) {
         callLog.add(new CallStart(caller, callee));
     }
+    
+    public void callInitiated(String caller, String callee, long timeStamp) {
+        callLog.add(new CallStart(caller, callee, timeStamp));
+    }
 
     public void callCompleted(String caller, String callee) {
         callLog.add(new CallEnd(caller, callee));
+    }
+    
+    public void callCompleted(String caller, String callee, long timeStamp) {
+        callLog.add(new CallEnd(caller, callee, timeStamp));
     }
 
     public void createCustomerBills() {
