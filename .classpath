@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="AcmeTelecom/specs"/>
+	<classpathentry kind="src" path="AcmeTelecom/src"/>
+	<classpathentry kind="src" path="AcmeTelecom/test"/>
+	<classpathentry kind="lib" path="AcmeTelecom/lib/concordion-1.4.2.jar"/>
+	<classpathentry kind="lib" path="AcmeTelecom/lib/external.jar"/>
+	<classpathentry kind="lib" path="AcmeTelecom/lib/junit-4.8.2.jar"/>
+	<classpathentry kind="lib" path="AcmeTelecom/lib/ognl-2.6.9.jar"/>
+	<classpathentry kind="lib" path="AcmeTelecom/lib/xom-1.2.5.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="AcmeTelecom/lib/bsh-core-2.0b4.jar"/>
+	<classpathentry kind="lib" path="AcmeTelecom/lib/cglib-2.1_3-src.jar"/>
+	<classpathentry kind="lib" path="AcmeTelecom/lib/cglib-nodep-2.1_3.jar"/>
+	<classpathentry kind="lib" path="AcmeTelecom/lib/hamcrest-core-1.1.jar"/>
+	<classpathentry kind="lib" path="AcmeTelecom/lib/hamcrest-library-1.1.jar"/>
+	<classpathentry kind="lib" path="AcmeTelecom/lib/jmock-2.5.1.jar"/>
+	<classpathentry kind="lib" path="AcmeTelecom/lib/jmock-junit3-2.5.1.jar"/>
+	<classpathentry kind="lib" path="AcmeTelecom/lib/jmock-junit4-2.5.1.jar"/>
+	<classpathentry kind="lib" path="AcmeTelecom/lib/jmock-legacy-2.5.1.jar"/>
+	<classpathentry kind="lib" path="AcmeTelecom/lib/jmock-script-2.5.1.jar"/>
+	<classpathentry kind="lib" path="AcmeTelecom/lib/objenesis-1.0.jar"/>
+	<classpathentry kind="lib" path="AcmeTelecom/lib/joda-time-2.0-javadoc.jar"/>
+	<classpathentry kind="lib" path="AcmeTelecom/lib/joda-time-2.0-sources.jar"/>
+	<classpathentry kind="lib" path="AcmeTelecom/lib/joda-time-2.0.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
