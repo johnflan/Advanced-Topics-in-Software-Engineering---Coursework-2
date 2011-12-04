@@ -66,10 +66,10 @@ public class BillingSystem {
 
         CallEvent start = null;
         for (CallEvent event : customerEvents) {
-            if (event instanceof CallStart) {
+            if (event instanceof iCallStart) {
                 start = event;
             }
-            if (event instanceof CallEnd && start != null) {
+            if (event instanceof iCallEnd && start != null) {
                 calls.add(new Call((iCallStart) start,(iCallEnd) event));
                 start = null;
             }

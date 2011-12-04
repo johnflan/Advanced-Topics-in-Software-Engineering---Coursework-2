@@ -1,4 +1,4 @@
-package com.acmetelecom.tests;
+package com.acmetelecom;
 
 import static org.junit.Assert.*;
 import java.text.SimpleDateFormat;

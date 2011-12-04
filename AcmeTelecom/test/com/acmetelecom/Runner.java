@@ -1,4 +1,4 @@
-package com.acmetelecom.tests;
+package com.acmetelecom;
 
 import com.acmetelecom.BillingSystem;
 
