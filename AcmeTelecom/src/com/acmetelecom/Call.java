@@ -3,6 +3,9 @@ package com.acmetelecom;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
+
 public class Call implements iCall{
 
     private iCallStart start;
@@ -19,18 +22,18 @@ public class Call implements iCall{
     }
 
     public int durationSeconds() {
-        return (int) (((end.time() - start.time()) / 1000));
+        return (int) new Duration(new DateTime(start.time()), new DateTime(end.time())).getStandardSeconds();
     }
 
     public String date() {
         return SimpleDateFormat.getInstance().format(new Date(start.time()));
     }
 
-    public Date startTime() {
-        return new Date(start.time());
+    public DateTime startTime() {
+        return new DateTime(start.time());
     }
 
-    public Date endTime() {
-        return new Date(end.time());
+    public DateTime endTime() {
+        return new DateTime(end.time());
     }
 }

@@ -7,6 +7,7 @@ import com.acmetelecom.customer.CustomerDatabase;
 import com.acmetelecom.customer.Tariff;
 import com.acmetelecom.customer.TariffLibrary;
 
+import java.io.FileInputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -18,16 +19,54 @@ public class BillingSystem {
     private final TariffLibrary centralTariffDatabase;
     private final iBillGenerator billGenerator;
     
+    static final String PEAK_RATE_START_TIME = "peak_rate_start";
+	static final String OFF_PEAK_RATE_START_TIME = "off-peak_rate_start";
+    
     public BillingSystem(){
     	this.centralCustomerDatabase = CentralCustomerDatabase.getInstance();
     	this.centralTariffDatabase = CentralTariffDatabase.getInstance();
     	this.billGenerator = new BillGenerator();
+    	loadConfigurationProperties();
     }
     
-    public BillingSystem(CustomerDatabase custDB, TariffLibrary tarDB, iBillGenerator billGen){
+    private void loadConfigurationProperties() {
+    	Properties props = new Properties();
+    	String peak_rate_start = "";
+    	String off_peak_rate_start = "";
+        //Initialise the system parameters
+      	try {
+  				props.load(new FileInputStream("billing_system.properties"));
+  			} catch (Exception e) {
+  				// TODO Auto-generated catch block
+  				System.out.println("Unable to load configuration file \"billing_system.properties\"");
+  			} 
+     		
+		try {
+			if(props.containsKey(PEAK_RATE_START_TIME))
+				peak_rate_start = props.getProperty(PEAK_RATE_START_TIME);
+
+			
+			if(props.containsKey(OFF_PEAK_RATE_START_TIME))
+     			off_peak_rate_start = props.getProperty(OFF_PEAK_RATE_START_TIME);
+
+			
+			if (off_peak_rate_start == null || peak_rate_start == null)
+				throw new Exception("Configuration error!");	
+ 				
+		} catch (Exception e) {
+			e.getMessage();
+ 		}
+		
+		DaytimePeakPeriod.OFF_PEAK_RATE_START_TIME = Integer.parseInt(off_peak_rate_start);
+		DaytimePeakPeriod.PEAK_RATE_START_TIME = Integer.parseInt(peak_rate_start);
+
+	}
+
+	public BillingSystem(CustomerDatabase custDB, TariffLibrary tarDB, iBillGenerator billGen){
     	this.centralCustomerDatabase = custDB;
     	this.centralTariffDatabase = tarDB;
     	this.billGenerator = billGen;
+    	loadConfigurationProperties();
     }
     
     public List<CallEvent> getCallLog(){

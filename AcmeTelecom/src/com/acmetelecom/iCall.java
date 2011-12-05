@@ -1,6 +1,6 @@
 package com.acmetelecom;
 
-import java.util.Date;
+import org.joda.time.DateTime;
 
 public interface iCall {
 
@@ -10,8 +10,8 @@ public interface iCall {
 
     public String date();
 
-    public Date startTime();
+    public DateTime startTime();
 
-    public Date endTime();
+    public DateTime endTime();
     
 }
