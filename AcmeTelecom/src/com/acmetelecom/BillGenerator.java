@@ -6,9 +6,9 @@ import java.util.List;
 
 public class BillGenerator implements iBillGenerator {
 
-    public void send(Customer customer, List<BillingSystem.LineItem> calls, String totalBill, Printer printer) {
+    public void send(Customer customer, List<LineItem> calls, String totalBill, Printer printer) {
         printer.printHeading(customer.getFullName(), customer.getPhoneNumber(), customer.getPricePlan());
-        for (BillingSystem.LineItem call : calls) {
+        for (LineItem call : calls) {
             printer.printItem(call.date(), call.callee(), call.durationMinutes(), MoneyFormatter.penceToPounds(call.cost()));
         }
         printer.printTotal(totalBill);

@@ -16,7 +16,7 @@ import org.jmock.internal.State;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.acmetelecom.BillingSystem.LineItem;
+import com.acmetelecom.LineItem;
 import com.acmetelecom.customer.Customer;
 import com.acmetelecom.customer.CustomerDatabase;
 import com.acmetelecom.customer.Tariff;
@@ -113,7 +113,7 @@ public class BillingSystemTest {
 		context.checking(new Expectations(){{
 			oneOf (customerDatabase).getCustomers(); will(returnValue(customerList));
 			oneOf (tariffLibrary).tarriffFor(customer1); will(returnValue(tariff1));
-			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost), HtmlPrinter.getInstance());
+			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost), with(HtmlPrinter.getInstance()));
 		}});
 		
 		billingSystem.createCustomerBills();
@@ -137,7 +137,7 @@ public class BillingSystemTest {
 		context.checking(new Expectations(){{
 			oneOf (customerDatabase).getCustomers(); will(returnValue(customerList));
 			oneOf (tariffLibrary).tarriffFor(customer1); will(returnValue(tariff1));
-			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost), HtmlPrinter.getInstance());
+			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost), with(HtmlPrinter.getInstance()));
 		}});
 		
 		billingSystem.createCustomerBills();
@@ -162,7 +162,7 @@ public class BillingSystemTest {
 		context.checking(new Expectations(){{
 			oneOf (customerDatabase).getCustomers(); will(returnValue(customerList));
 			oneOf (tariffLibrary).tarriffFor(customer1); will(returnValue(tariff1));
-			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost), HtmlPrinter.getInstance());
+			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost), with(HtmlPrinter.getInstance()));
 		}});
 		
 		billingSystem.createCustomerBills();
@@ -190,8 +190,8 @@ public class BillingSystemTest {
 			oneOf (customerDatabase).getCustomers(); will(returnValue(customerList));
 			oneOf (tariffLibrary).tarriffFor(customer1); will(returnValue(tariff1));
 			oneOf (tariffLibrary).tarriffFor(customer1b); will(returnValue(tariff1b));
-			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost1), HtmlPrinter.getInstance());
-			oneOf (billGenerator).send(with(customer1b), with(any(List.class)), with(expectedCost1b), HtmlPrinter.getInstance());
+			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost1), with(HtmlPrinter.getInstance()));
+			oneOf (billGenerator).send(with(customer1b), with(any(List.class)), with(expectedCost1b), with(HtmlPrinter.getInstance()));
 		}});
 		
 		billingSystem.createCustomerBills();
@@ -216,9 +216,9 @@ public class BillingSystemTest {
 			oneOf (tariffLibrary).tarriffFor(customer1); will(returnValue(tariff1));
 			oneOf (tariffLibrary).tarriffFor(customer2); will(returnValue(tariff2));
 			oneOf (tariffLibrary).tarriffFor(customer3); will(returnValue(tariff3));
-			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost1), HtmlPrinter.getInstance());
-			oneOf (billGenerator).send(with(customer2), with(any(List.class)), with(expectedCost2), HtmlPrinter.getInstance());
-			oneOf (billGenerator).send(with(customer3), with(any(List.class)), with(expectedCost3), HtmlPrinter.getInstance());
+			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost1), with(HtmlPrinter.getInstance()));
+			oneOf (billGenerator).send(with(customer2), with(any(List.class)), with(expectedCost2), with(HtmlPrinter.getInstance()));
+			oneOf (billGenerator).send(with(customer3), with(any(List.class)), with(expectedCost3), with(HtmlPrinter.getInstance()));
 		}});
 		
 		billingSystem.createCustomerBills();
@@ -241,9 +241,9 @@ public class BillingSystemTest {
 			oneOf (tariffLibrary).tarriffFor(customer1); will(returnValue(tariff1));
 			oneOf (tariffLibrary).tarriffFor(customer2); will(returnValue(tariff2));
 			oneOf (tariffLibrary).tarriffFor(customer3); will(returnValue(tariff3));
-			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost1), HtmlPrinter.getInstance());
-			oneOf (billGenerator).send(with(customer2), with(any(List.class)), with(expectedCost2), HtmlPrinter.getInstance());
-			oneOf (billGenerator).send(with(customer3), with(any(List.class)), with(expectedCost3), HtmlPrinter.getInstance());
+			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost1), with(HtmlPrinter.getInstance()));
+			oneOf (billGenerator).send(with(customer2), with(any(List.class)), with(expectedCost2), with(HtmlPrinter.getInstance()));
+			oneOf (billGenerator).send(with(customer3), with(any(List.class)), with(expectedCost3), with(HtmlPrinter.getInstance()));
 		}});
 		
 		billingSystem.createCustomerBills();
@@ -269,9 +269,9 @@ public class BillingSystemTest {
 			oneOf (tariffLibrary).tarriffFor(customer1); will(returnValue(tariff1));
 			oneOf (tariffLibrary).tarriffFor(customer2); will(returnValue(tariff2));
 			oneOf (tariffLibrary).tarriffFor(customer3); will(returnValue(tariff3));
-			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost1), HtmlPrinter.getInstance());
-			oneOf (billGenerator).send(with(customer2), with(any(List.class)), with(expectedCost2), HtmlPrinter.getInstance());
-			oneOf (billGenerator).send(with(customer3), with(any(List.class)), with(expectedCost3), HtmlPrinter.getInstance());
+			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost1), with(HtmlPrinter.getInstance()));
+			oneOf (billGenerator).send(with(customer2), with(any(List.class)), with(expectedCost2), with(HtmlPrinter.getInstance()));
+			oneOf (billGenerator).send(with(customer3), with(any(List.class)), with(expectedCost3), with(HtmlPrinter.getInstance()));
 		}});
 		
 		billingSystem.createCustomerBills();
@@ -297,9 +297,9 @@ public class BillingSystemTest {
 			oneOf (tariffLibrary).tarriffFor(customer1); will(returnValue(tariff1));
 			oneOf (tariffLibrary).tarriffFor(customer2); will(returnValue(tariff2));
 			oneOf (tariffLibrary).tarriffFor(customer3); will(returnValue(tariff3));
-			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost1), HtmlPrinter.getInstance());
-			oneOf (billGenerator).send(with(customer2), with(any(List.class)), with(expectedCost2), HtmlPrinter.getInstance());
-			oneOf (billGenerator).send(with(customer3), with(any(List.class)), with(expectedCost3), HtmlPrinter.getInstance());
+			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost1), with(HtmlPrinter.getInstance()));
+			oneOf (billGenerator).send(with(customer2), with(any(List.class)), with(expectedCost2), with(HtmlPrinter.getInstance()));
+			oneOf (billGenerator).send(with(customer3), with(any(List.class)), with(expectedCost3), with(HtmlPrinter.getInstance()));
 		}});
 		
 		billingSystem.createCustomerBills();
@@ -326,9 +326,9 @@ public class BillingSystemTest {
 			oneOf (tariffLibrary).tarriffFor(customer1); will(returnValue(tariff1));
 			oneOf (tariffLibrary).tarriffFor(customer2); will(returnValue(tariff2));
 			oneOf (tariffLibrary).tarriffFor(customer3); will(returnValue(tariff3));
-			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost1), HtmlPrinter.getInstance());
-			oneOf (billGenerator).send(with(customer2), with(any(List.class)), with(expectedCost2), HtmlPrinter.getInstance());
-			oneOf (billGenerator).send(with(customer3), with(any(List.class)), with(expectedCost3), HtmlPrinter.getInstance());
+			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost1), with(HtmlPrinter.getInstance()));
+			oneOf (billGenerator).send(with(customer2), with(any(List.class)), with(expectedCost2), with(HtmlPrinter.getInstance()));
+			oneOf (billGenerator).send(with(customer3), with(any(List.class)), with(expectedCost3), with(HtmlPrinter.getInstance()));
 		}});
 		
 		billingSystem.createCustomerBills();

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.acmetelecom.BillingSystem.LineItem;
+import com.acmetelecom.LineItem;
 import com.acmetelecom.customer.Customer;
 
 public class TestBillGenerator implements iBillGenerator {

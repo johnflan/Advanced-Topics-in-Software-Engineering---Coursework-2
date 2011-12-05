@@ -11,7 +11,7 @@ import org.jmock.Mockery;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.acmetelecom.BillingSystem.LineItem;
+import com.acmetelecom.LineItem;
 import com.acmetelecom.customer.Customer;
 import com.acmetelecom.customer.Tariff;
 
