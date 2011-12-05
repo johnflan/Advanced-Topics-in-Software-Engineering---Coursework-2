@@ -1,0 +1,28 @@
+\section{Testing}
+Due to the importance of this system to the business, it is imperative that we ensure the correctness of the existing and new functionality. Any existing test documents or code for the system is non-existent or has been lost. Before any modifications can be made to the system we must create a comprehensive test framework. Additionally this test infrastructure will help make future changes to this system more quickly and for a lower cost.
+
+Below we will outline our methodology for acceptance and unit testing of the existing code.
+
+\subsection{Acceptance Testing}
+It is important to test as a complete system i.e. for a given range of inputs confirm all the components interact to provide a correct result. Due to the short time-frame and to ensure correctness of the system, it was decided to involve the customer in specification of acceptance tests for the project and if possible have the customer create their own acceptance test suite. 
+
+There are a number of approaches we may use to execute tests provided by non-technical stakeholders. These vary from parsing paragraphs of natural language to simple scripting interfaces and table based system definitions. For a project like the billing system inputs and outputs of tabular data most closely match both our programme requirements and a data format familiar to the AcmeTelecom staff in the billing department.
+
+There are a number of open-source table based acceptance testing tools available, many of which are commonly used and have active communities. We require that the selected tool offers an interface that is simple to use and requires minimal technical knowledge enabling the customer to write parseable acceptance tests. Below we list some of the relevant testing frameworks.
+
+
+\begin{itemize}
+  \item Framework for Integrated Test (FIT)\\
+Tests are composed of test documents, usually in HTML to define configuration, input and output parameters for a system. These documents are executed using FIT harnesses to parse the tabular data and execute it against the the system. Finally comparing expected values to the actual values in order to determine if the system meets the requirements, it output reports mirroring the input definitions. 
+  \item FitNesse\\
+Based on FIT, FitNesse enhances the concept through the use of a wiki environment for writing tests. This promotes increased collaboration, although we still must write fixtures test components.
+  \item Concordion\\
+An evolution of the FIT concept, Concordion utilises the JUnit framework for executing the tests. It offers cleaner fixture code and explicitly defined mapping through the inclusion of HTML source attributes. But these specification documents will require developer to define the mappings to fixtures.
+\end{itemize}
+
+After evaluation of the available acceptance testing tooling, we concluded that Concordion best fulfilled the requirements of the project. 
+
+Implementation of the test fixtures required that some modifications be made to the code. These changes we necessary due to the BillingSystem being tightly coupled with BillGenerator.  It was necessary to create a second constructor in the BillingSystem to pass a reference to a BillGenerator. This enabled the fixture to access the results of the call cost calculations and confirm their correctness. Changes like this were also necessary for the CustomerDatabase and TariffDatabase. 
+
+
+\subsection{Unit Testing}
