@@ -73,7 +73,7 @@ public class BillingSystemTest {
 		tariffLibrary = context.mock(TariffLibrary.class);
 		calls = context.mock(iCall.class);
 		billGenerator = context.mock(iBillGenerator.class);
-		billingSystem = new BillingSystem(customerDatabase,tariffLibrary,billGenerator);
+		billingSystem = new BillingSystem(customerDatabase, tariffLibrary, billGenerator);
 	}
 	
 	//Checks that call events can be added in the log
@@ -212,6 +212,7 @@ public class BillingSystemTest {
 		final String expectedCost2 = calculateExpectedCost(tariff2,60,0);
 		final String expectedCost3 = calculateExpectedCost(tariff3,60,0);
 		
+		
 		context.checking(new Expectations(){{
 			oneOf (customerDatabase).getCustomers(); will(returnValue(customerList));
 			oneOf (tariffLibrary).tarriffFor(customer1); will(returnValue(tariff1));
@@ -221,7 +222,7 @@ public class BillingSystemTest {
 			oneOf (billGenerator).send(with(customer2), with(any(List.class)), with(expectedCost2), with(HtmlPrinter.getInstance()));
 			oneOf (billGenerator).send(with(customer3), with(any(List.class)), with(expectedCost3), with(HtmlPrinter.getInstance()));
 		}});
-		
+		System.out.println("Test expected cost: " + expectedCost1 + " --- for customer " + customer1.getFullName());
 		billingSystem.createCustomerBills();
 	}
 	
@@ -273,6 +274,25 @@ public class BillingSystemTest {
 			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost1), with(HtmlPrinter.getInstance()));
 			oneOf (billGenerator).send(with(customer2), with(any(List.class)), with(expectedCost2), with(HtmlPrinter.getInstance()));
 			oneOf (billGenerator).send(with(customer3), with(any(List.class)), with(expectedCost3), with(HtmlPrinter.getInstance()));
+		}});
+		
+		billingSystem.createCustomerBills();
+	}
+	@Test
+	public void checkCallCostWhenCallStartsInOffPeakTimeAndEndsInPeakTime1(){
+		customerList.add(customer1);
+
+		initializeAllCallsForOffPeakToPeak();
+		
+		final String expectedCost1 = calculateExpectedCost(tariff1,50,0);
+
+		
+		context.checking(new Expectations(){{
+			oneOf (customerDatabase).getCustomers(); will(returnValue(customerList));
+			oneOf (tariffLibrary).tarriffFor(customer1); will(returnValue(tariff1));
+
+			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost1), with(HtmlPrinter.getInstance()));
+
 		}});
 		
 		billingSystem.createCustomerBills();
@@ -346,10 +366,10 @@ public class BillingSystemTest {
 	///////////////////// Initializing Calls ////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 	private void initializeAllCallsForPeak() {
-		Date startDatePeak1 = new Date(111,0,0,10,0,0);
+		Date startDatePeak1 = new Date(111,1,1,10,0,0);
 		Date startDatePeak2 = new Date(111,0,5,10,0,0);
 		Date startDatePeak3 = new Date(111,0,10,10,0,0);
-		Date endDatePeak1 = new Date(111,0,0,10,1,0);
+		Date endDatePeak1 = new Date(111,1,1,10,1,0);
 		Date endDatePeak2 = new Date(111,0,5,10,1,0);
 		Date endDatePeak3 = new Date(111,0,10,10,1,0);
 		
