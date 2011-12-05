@@ -102,6 +102,7 @@ public class BillingSystemTest {
 	public void checkWhatHappensIfSomeoneCallsHimself(){
 		customerList.add(customer1);
 		List<CallEvent> callLog = new ArrayList<CallEvent>();
+		System.out.println(startDateOffPeak1.getTime());
 		FakeCallStart callStart = new FakeCallStart("111111111111","111111111111",startDateOffPeak1.getTime());
 		callLog.add(callStart);
 		FakeCallEnd callEnd=new FakeCallEnd("111111111111","111111111111",endDateOffPeak1.getTime());
