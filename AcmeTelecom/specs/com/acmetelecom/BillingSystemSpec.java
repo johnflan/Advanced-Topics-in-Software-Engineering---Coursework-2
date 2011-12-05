@@ -1,4 +1,4 @@
-package com.acmetelecom.specs.billingsystem;
+package com.acmetelecom;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -24,7 +24,7 @@ import com.acmetelecom.customer.CustomerDatabase;
 import com.acmetelecom.customer.Tariff;
 import com.acmetelecom.customer.TariffLibrary;
 
-public class BillingSystemExistingData extends ConcordionTestCase {
+public class BillingSystemSpec extends ConcordionTestCase {
 
 	//config from spec
 	BillingSystem billingSystem;
@@ -39,7 +39,7 @@ public class BillingSystemExistingData extends ConcordionTestCase {
 	iBillGenerator billGenerator;
 
 	
-	public BillingSystemExistingData() {
+	public BillingSystemSpec() {
 		//initialise the mock objects
 		context = new Mockery();
 		customerDatabase = context.mock(CustomerDatabase.class);

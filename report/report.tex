@@ -42,8 +42,8 @@
 \usepackage{fancyhdr}
 
 \pagestyle{fancy}
-\lhead{\footnotesize {Advanced Topics in Software Engineering - Coursework 2} }
-\rhead{\footnotesize {} }
+\lhead{\footnotesize {AcmeTelecom - Billing System - Coursework 2} }
+\rhead{\footnotesize {Change Request} }
 
 \renewcommand\headheight{24pt}
 \renewcommand\footrulewidth{0.4pt}
@@ -55,20 +55,12 @@
 \title{TITLE GOES HERE}
 \date{\today}
 
+
+
 \begin{document}
-begining of doc
+\include{introduction}
 
-\subsection*{UDP}
+\include{testing}
 
-\subsubsection*{RIM client/server}
-\begin{center}
-	\includegraphics[scale=0.5]{rmi_client.png}
-\end{center}
-
-\pagebreak
-\section*{Project source code}
-\subsection*{UDP Client}
-\lstinputlisting{code/udp/UDPClient.java}
-
-
+\include{appendix}
 \end{document}
