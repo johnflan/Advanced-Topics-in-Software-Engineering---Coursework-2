@@ -355,6 +355,8 @@ public class BillingSystemTest {
 		//System.out.println("Expected Cost: "+expectedCost1);
 		billingSystem.createCustomerBills();
 	}
+	
+	//Tests the cost of a call when the year changes
 	@Test
 	public void checkCallCostOverChangeOfYear(){
 		customerList.add(customer1);
@@ -382,7 +384,7 @@ public class BillingSystemTest {
 		billingSystem.createCustomerBills();
 	}
 	
-	//Test what happens if a CallEnd event is earlier than a CallStart event. Call cost should be 0.0
+	//Tests what happens if a CallEnd event is earlier than a CallStart event. Call cost should be 0.0
 	@Test
 	public void checkCallEndBeforeCallStart(){
 		customerList.add(customer1);
@@ -397,12 +399,69 @@ public class BillingSystemTest {
 		//peakSeconds=0, offPeakSeconds=0
 		long peakSeconds=0;
 		long offPeakSeconds=0;
-		final String expectedCost1 = calculateExpectedCost(tariff1,peakSeconds,offPeakSeconds);
+		final String expectedCost = calculateExpectedCost(tariff1,peakSeconds,offPeakSeconds);
 		
 		context.checking(new Expectations(){{
 			oneOf (customerDatabase).getCustomers(); will(returnValue(customerList));
 			oneOf (tariffLibrary).tarriffFor(customer1); will(returnValue(tariff1));
+			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost), with(HtmlPrinter.getInstance()));
+		}});
+		billingSystem.createCustomerBills();
+	}
+	
+	//Tests what happens if a CallStart event and the next CallEnd event have different Callee numbers
+	//The result is that the cost is calculated which is wrong
+	//TODO
+	@Test
+	public void checkCallStartWithCallEndToAnotherNumber(){
+		customerList.add(customer1);
+		
+		List<CallEvent> callLog = new ArrayList<CallEvent>();
+		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",peakDateTime1.getMillis());
+		callLog.add(callStart);
+		FakeCallEnd callEnd = new FakeCallEnd("111111111111","333333333333",peakDateTime1.plusHours(1).getMillis());
+		callLog.add(callEnd);
+		billingSystem.setCallLog(callLog);
+		
+		//peakSeconds=1hour, offPeakSeconds=0
+		long peakSeconds= 1 * 60 * 60;
+		long offPeakSeconds=0;
+		final String expectedCost = calculateExpectedCost(tariff1,peakSeconds,offPeakSeconds);
+		
+		context.checking(new Expectations(){{
+			oneOf (customerDatabase).getCustomers(); will(returnValue(customerList));
+			oneOf (tariffLibrary).tarriffFor(customer1); will(returnValue(tariff1));
+			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost), with(HtmlPrinter.getInstance()));
+		}});
+		billingSystem.createCustomerBills();
+	}
+	
+	//Tests what happens if a CallStart event and the next CallEnd event have different Caller numbers and the same Callee
+	
+	@Test
+	public void checkCallStartWithADifferentNumberAndCallEndWithTheSame(){
+		customerList.add(customer1);
+		customerList.add(customer2);
+		
+		List<CallEvent> callLog = new ArrayList<CallEvent>();
+		FakeCallStart callStart = new FakeCallStart("111111111111","333333333333",peakDateTime1.getMillis());
+		callLog.add(callStart);
+		FakeCallEnd callEnd = new FakeCallEnd("222222222222","333333333333",peakDateTime1.plusHours(1).getMillis());
+		callLog.add(callEnd);
+		billingSystem.setCallLog(callLog);
+		
+		//peakSeconds=0, offPeakSeconds=0
+		long peakSeconds=0;
+		long offPeakSeconds=0;
+		final String expectedCost1 = calculateExpectedCost(tariff1,peakSeconds,offPeakSeconds);
+		final String expectedCost2 = calculateExpectedCost(tariff2,peakSeconds,offPeakSeconds);
+		
+		context.checking(new Expectations(){{
+			oneOf (customerDatabase).getCustomers(); will(returnValue(customerList));
+			oneOf (tariffLibrary).tarriffFor(customer1); will(returnValue(tariff1));
+			oneOf (tariffLibrary).tarriffFor(customer2); will(returnValue(tariff2));
 			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost1), with(HtmlPrinter.getInstance()));
+			oneOf (billGenerator).send(with(customer2), with(any(List.class)), with(expectedCost2), with(HtmlPrinter.getInstance()));
 		}});
 		billingSystem.createCustomerBills();
 	}
@@ -419,7 +478,7 @@ public class BillingSystemTest {
 		callLog.add(callEnd);
 		billingSystem.setCallLog(callLog);
 		
-		//peakSeconds=0, offPeakSeconds=0
+		//peakSeconds=0, offPeakSeconds=1
 		long peakSeconds=0;
 		long offPeakSeconds=1;
 		final String expectedCost1 = calculateExpectedCost(tariff1,peakSeconds,offPeakSeconds);

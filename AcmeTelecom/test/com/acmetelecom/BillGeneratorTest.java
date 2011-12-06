@@ -3,11 +3,11 @@ package com.acmetelecom;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,7 +15,6 @@ import com.acmetelecom.LineItem;
 import com.acmetelecom.customer.Customer;
 import com.acmetelecom.customer.Tariff;
 
-@SuppressWarnings("deprecation")
 public class BillGeneratorTest {
 	//Classes needed to add fake calls in the log
 	private class FakeCallStart extends CallEvent implements iCallStart{
@@ -61,15 +60,14 @@ public class BillGeneratorTest {
 	//Tests one call to see if the total cost can change
 	@Test
 	public void checkWhenACallWasMade(){
-		final Date startDate = new Date(111,5,5,5,0,0);
-		final Date endDate = new Date(111,5,5,5,1,0);
-		final Call call = new Call(new FakeCallStart("111111111111","222222222222",startDate.getTime()),new FakeCallEnd("111111111111","222222222222",endDate.getTime()));
+		DateTime startDate = new DateTime(2011,5,5,5,0,0);
+		final Call call = new Call(new FakeCallStart("111111111111","222222222222",startDate.getMillis()),new FakeCallEnd("111111111111","222222222222",startDate.plusHours(1).getMillis()));
 		final String expectedCost = calculateExpectedCost(tariff,0,60);
 		calls.add(new LineItem(call, (new BigDecimal(expectedCost)).multiply(new BigDecimal(100))));
 		
 		context.checking(new Expectations() {{
 			oneOf (printer).printHeading(customer.getFullName(), customer.getPhoneNumber(), customer.getPricePlan());
-			oneOf (printer).printItem("05/06/11 05:00", "222222222222", "1:00", expectedCost);
+			oneOf (printer).printItem("05/05/11 05:00", "222222222222", "60:00", expectedCost);
 			oneOf (printer).printTotal(expectedCost);
 		}});
 		
@@ -79,15 +77,13 @@ public class BillGeneratorTest {
 	//Tests more than 1 call to see if they are printed
 	@Test
 	public void checkWhenTwoCallsWereMade(){
-		Date startDate = new Date(111,5,5,5,0,0);
-		Date endDate = new Date(111,5,5,5,1,0);
-		Call call = new Call(new FakeCallStart("111111111111","222222222222",startDate.getTime()),new FakeCallEnd("111111111111","222222222222",endDate.getTime()));
+		DateTime startDate = new DateTime(2011,5,5,5,0,0);
+		Call call = new Call(new FakeCallStart("111111111111","222222222222",startDate.getMillis()),new FakeCallEnd("111111111111","222222222222",startDate.plusHours(1).getMillis()));
 		final String expectedCost1 = calculateExpectedCost(tariff,0,60);
 		calls.add(new LineItem(call, (new BigDecimal(expectedCost1)).multiply(new BigDecimal(100))));
 		
-		startDate = new Date(111,6,6,5,0,0);
-		endDate = new Date(111,6,6,5,1,0);
-		call = new Call(new FakeCallStart("111111111111","222222222222",startDate.getTime()),new FakeCallEnd("111111111111","222222222222",endDate.getTime()));
+		startDate = new DateTime(2011,6,6,5,0,0);
+		call = new Call(new FakeCallStart("111111111111","222222222222",startDate.getMillis()),new FakeCallEnd("111111111111","222222222222",startDate.plusHours(1).getMillis()));
 		final String expectedCost2 = calculateExpectedCost(tariff,0,60);
 		calls.add(new LineItem(call, (new BigDecimal(expectedCost2)).multiply(new BigDecimal(100))));
 		
@@ -95,8 +91,8 @@ public class BillGeneratorTest {
 		
 		context.checking(new Expectations() {{
 			oneOf (printer).printHeading(customer.getFullName(), customer.getPhoneNumber(), customer.getPricePlan());
-			oneOf (printer).printItem("05/06/11 05:00", "222222222222", "1:00", expectedCost1);
-			oneOf (printer).printItem("06/07/11 05:00", "222222222222", "1:00", expectedCost1);
+			oneOf (printer).printItem("05/05/11 05:00", "222222222222", "60:00", expectedCost1);
+			oneOf (printer).printItem("06/06/11 05:00", "222222222222", "60:00", expectedCost2);
 			oneOf (printer).printTotal(expectedTotalCost);
 		}});
 		

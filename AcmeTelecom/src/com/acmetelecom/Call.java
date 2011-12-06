@@ -1,20 +1,16 @@
 package com.acmetelecom;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.DateTimeParser;
 import org.joda.time.format.DateTimePrinter;
 
 public class Call implements iCall{
 
     private static final DateTimePrinter DateTimePrinter = null;
-		private iCallStart start;
+	private iCallStart start;
     private iCallEnd end;
 
     public Call(iCallStart start, iCallEnd end) {

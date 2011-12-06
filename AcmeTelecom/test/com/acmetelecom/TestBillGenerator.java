@@ -1,6 +1,5 @@
 package com.acmetelecom;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +19,7 @@ public class TestBillGenerator implements iBillGenerator {
 		
 		if (totalForCustomer.containsKey(customer))
 			try {
-				throw new Exception("Bill alread calculated for Customer");
+				throw new Exception("Bill already calculated for Customer");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

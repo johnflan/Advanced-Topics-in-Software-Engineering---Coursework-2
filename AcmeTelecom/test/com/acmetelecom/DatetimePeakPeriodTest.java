@@ -2,12 +2,9 @@ package com.acmetelecom;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import java.util.Date;
-
 import org.joda.time.DateTime;
 import org.junit.Test;
 
-@SuppressWarnings("deprecation")
 public class DatetimePeakPeriodTest {
 	DaytimePeakPeriod dtpp = new DaytimePeakPeriod();
 	DateTime time;
