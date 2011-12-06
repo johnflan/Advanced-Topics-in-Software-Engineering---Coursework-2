@@ -61,13 +61,6 @@ public class BillingSystemTest {
 	Tariff tariff3 = Tariff.Leisure;
 	
 	//Dates for 3 calls
-/*	DateTime startDateOffPeak1 = new DateTime(2011,1,1,0,0,0);
-	DateTime startDateOffPeak2 = new DateTime(2011,1,5,0,0,0);
-	DateTime startDateOffPeak3 = new DateTime(2011,1,10,0,0,0);
-	DateTime endDateOffPeak1 = new DateTime(2011,1,1,0,1,0);
-	DateTime endDateOffPeak2 = new DateTime(2011,1,5,0,1,0);
-	DateTime endDateOffPeak3 = new DateTime(2011,1,10,0,1,0);*/
-	
 	DateTime peakDateTime1;
 	DateTime offPeakDateTime1;
 	DateTime offPeakDateTime2;
@@ -289,7 +282,6 @@ public class BillingSystemTest {
 			oneOf (billGenerator).send(with(customer2), with(any(List.class)), with(expectedCost2), with(HtmlPrinter.getInstance()));
 			oneOf (billGenerator).send(with(customer3), with(any(List.class)), with(expectedCost3), with(HtmlPrinter.getInstance()));
 		}});
-		System.out.println("Test expected cost: " + expectedCost1 + " --- for customer " + customer1.getFullName());
 		billingSystem.createCustomerBills();
 	}
 		
@@ -346,7 +338,6 @@ public class BillingSystemTest {
 			oneOf (billGenerator).send(with(customer2), with(any(List.class)), with(expectedCost2), with(HtmlPrinter.getInstance()));
 			oneOf (billGenerator).send(with(customer3), with(any(List.class)), with(expectedCost3), with(HtmlPrinter.getInstance()));
 		}});
-		//System.out.println("Expected Cost: "+expectedCost1);
 		billingSystem.createCustomerBills();
 	}
 	
@@ -494,13 +485,6 @@ public class BillingSystemTest {
 	///////////////////// Initializing Calls ////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 	private void initializeAllCallsForPeak() {
-/*		DateTime startDatePeak1 = new DateTime(2011,1,1,10,0,0);
-		DateTime startDatePeak2 = new DateTime(2011,1,5,10,0,0);
-		DateTime startDatePeak3 = new DateTime(2011,1,10,10,0,0);
-		DateTime endDatePeak1 = new DateTime(2011,1,1,10,1,0);
-		DateTime endDatePeak2 = new DateTime(2011,1,5,10,1,0);
-		DateTime endDatePeak3 = new DateTime(2011,1,10,10,1,0);*/
-		
 		List<CallEvent> callLog = new ArrayList<CallEvent>();
 		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",peakDateTime1.getMillis());
 		callLog.add(callStart);
@@ -539,13 +523,6 @@ public class BillingSystemTest {
 	}
 	
 	private void initializeAllCallsForPeakToOffPeak() {
-/*		DateTime startDatePeak1 = new DateTime(2011,1,1,18,59,40);
-		DateTime startDatePeak2 = new DateTime(2011,1,5,18,59,40);
-		DateTime startDatePeak3 = new DateTime(2011,1,10,18,59,40);
-		DateTime endDateOffPeak1 = new DateTime(2011,1,1,19,0,30);
-		DateTime endDateOffPeak2 = new DateTime(2011,1,5,19,0,30);
-		DateTime endDateOffPeak3 = new DateTime(2011,1,10,19,0,30);*/
-		
 		List<CallEvent> callLog = new ArrayList<CallEvent>();
 		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",peakDateTime2.getMillis());
 		callLog.add(callStart);
@@ -565,13 +542,6 @@ public class BillingSystemTest {
 	}
 	
 	private void initializeAllCallsForOffPeakToPeak() {
-/*		DateTime startDateOffPeak1 = new DateTime(2011,1,1,6,59,40);
-		DateTime startDateOffPeak2 = new DateTime(2011,1,5,6,59,40);
-		DateTime startDateOffPeak3 = new DateTime(2011,1,10,6,59,40);
-		DateTime endDatePeak1 = new DateTime(2011,1,1,7,0,30);
-		DateTime endDatePeak2 = new DateTime(2011,1,5,7,0,30);
-		DateTime endDatePeak3 = new DateTime(2011,1,10,7,0,30);*/
-		
 		List<CallEvent> callLog = new ArrayList<CallEvent>();
 		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",offPeakDateTime1.getMillis());
 		callLog.add(callStart);
@@ -591,13 +561,6 @@ public class BillingSystemTest {
 	}
 	
 	private void initializeAllCallsForOffPeakToOffPeak() {
-/*		DateTime startDateOffPeak1 = new DateTime(2011,1,1,6,0,0);
-		DateTime startDateOffPeak2 = new DateTime(2011,1,5,6,0,0);
-		DateTime startDateOffPeak3 = new DateTime(2011,1,10,6,0,0);
-		DateTime endDateOffPeak1 = new DateTime(2011,1,3,5,0,0);
-		DateTime endDateOffPeak2 = new DateTime(2011,1,7,5,0,0);
-		DateTime endDateOffPeak3 = new DateTime(2011,1,12,5,0,0);*/
-		
 		List<CallEvent> callLog = new ArrayList<CallEvent>();
 		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",offPeakDateTime1.getMillis());
 		callLog.add(callStart);

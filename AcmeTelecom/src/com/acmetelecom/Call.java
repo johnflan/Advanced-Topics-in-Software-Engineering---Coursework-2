@@ -3,13 +3,8 @@ package com.acmetelecom;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.DateTimePrinter;
 
 public class Call implements iCall{
-
-    private static final DateTimePrinter DateTimePrinter = null;
 	private iCallStart start;
     private iCallEnd end;
 
@@ -60,9 +55,7 @@ public class Call implements iCall{
     }
 
     public String date() {
-    	DateTimeFormatter fmt=DateTimeFormat.shortDateTime();
-    	return fmt.print(new DateTime(start.time()));
-        //return SimpleDateFormat.getInstance().format(new Date(start.time()));
+    	return new DateTime(start.time()).toString("dd/MM/yy HH:mm:ss");
     }
 
     public DateTime startTime() {
