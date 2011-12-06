@@ -81,8 +81,8 @@ public class BillingSystemSpec extends ConcordionTestCase {
 		long callStartTime = (hour * 60 * 60 * 1000) + (minute * 60 * 1000);
 		long callEndTime = callStartTime + (durationMinutes * 60 * 1000);
 
-		billingSystem.callInitiated(fromNo, toNo, callStartTime);
-		billingSystem.callCompleted(fromNo, toNo, callEndTime);
+		billingSystem.startCall().atTime(callStartTime).from(fromNo).to(toNo);
+		billingSystem.endCall().atTime(callEndTime).from(fromNo).to(toNo);
 	}
 	
 	public void initialiseBillingSystem(){
@@ -102,7 +102,9 @@ public class BillingSystemSpec extends ConcordionTestCase {
 	}
 	
 	public String getTotalCostsFor(String custName, String telNo){
-		
+		//check both telephone number and name as
+		//it appears the system can have two customers
+		//with the same number
 		Set<Entry<Customer, String>> billSet = totalBill.entrySet();
 		Iterator<Entry<Customer, String>> billItr = billSet.iterator();
 		

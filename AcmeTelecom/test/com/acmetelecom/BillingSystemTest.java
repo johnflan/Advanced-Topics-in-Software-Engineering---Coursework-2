@@ -124,6 +124,7 @@ public class BillingSystemTest {
 		}});
 		
 		billingSystem.createCustomerBills();
+		
 	}
 	
 	//The result should be the cost from startDate2 until endDate2 (60 seconds)

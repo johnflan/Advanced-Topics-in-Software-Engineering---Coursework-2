@@ -6,6 +6,8 @@ import com.acmetelecom.customer.Customer;
 import com.acmetelecom.customer.CustomerDatabase;
 import com.acmetelecom.customer.Tariff;
 import com.acmetelecom.customer.TariffLibrary;
+import com.acmetelecom.logcall.CallFrom;
+
 
 import java.io.FileInputStream;
 import java.math.BigDecimal;
@@ -26,6 +28,13 @@ public class BillingSystem {
     	this.centralCustomerDatabase = CentralCustomerDatabase.getInstance();
     	this.centralTariffDatabase = CentralTariffDatabase.getInstance();
     	this.billGenerator = new BillGenerator();
+    	loadConfigurationProperties();
+    }
+    
+	public BillingSystem(CustomerDatabase customerDB, TariffLibrary tariffDB, iBillGenerator billGen){
+    	this.centralCustomerDatabase = customerDB;
+    	this.centralTariffDatabase = tariffDB;
+    	this.billGenerator = billGen;
     	loadConfigurationProperties();
     }
     
@@ -60,13 +69,6 @@ public class BillingSystem {
 		DaytimePeakPeriod.OFF_PEAK_RATE_START_TIME = Integer.parseInt(off_peak_rate_start);
 		DaytimePeakPeriod.PEAK_RATE_START_TIME = Integer.parseInt(peak_rate_start);
 	}
-
-	public BillingSystem(CustomerDatabase custDB, TariffLibrary tarDB, iBillGenerator billGen){
-    	this.centralCustomerDatabase = custDB;
-    	this.centralTariffDatabase = tarDB;
-    	this.billGenerator = billGen;
-    	loadConfigurationProperties();
-    }
     
     public List<CallEvent> getCallLog(){
     	return callLog;
@@ -76,18 +78,43 @@ public class BillingSystem {
     	this.callLog = callLog;
     }
     
+    //DSL Start call methods
+    public CallFrom startCall(){
+    	return new StartCall(this);
+    }
+    
+    public CallFrom endCall(){
+    	return new EndCall(this);
+    }
+    
+    @Deprecated
+    /*
+     * This method has been replace by the new DSL startCall() method
+     */
     public void callInitiated(String caller, String callee) {
         callLog.add(new CallStart(caller, callee));
     }
     
+    @Deprecated
+    /*
+     * This method has been replace by the new DSL startCall() method
+     */
     public void callInitiated(String caller, String callee, long timeStamp) {
         callLog.add(new CallStart(caller, callee, timeStamp));
     }
 
+    @Deprecated 
+    /*
+     * This method has been replace by the new DSL endCall() method
+     */
     public void callCompleted(String caller, String callee) {
         callLog.add(new CallEnd(caller, callee));
     }
     
+    @Deprecated 
+    /*
+     * This method has been replace by the new DSL endCall() method
+     */
     public void callCompleted(String caller, String callee, long timeStamp) {
         callLog.add(new CallEnd(caller, callee, timeStamp));
     }
