@@ -59,7 +59,6 @@ public class BillingSystem {
 		
 		DaytimePeakPeriod.OFF_PEAK_RATE_START_TIME = Integer.parseInt(off_peak_rate_start);
 		DaytimePeakPeriod.PEAK_RATE_START_TIME = Integer.parseInt(peak_rate_start);
-
 	}
 
 	public BillingSystem(CustomerDatabase custDB, TariffLibrary tarDB, iBillGenerator billGen){

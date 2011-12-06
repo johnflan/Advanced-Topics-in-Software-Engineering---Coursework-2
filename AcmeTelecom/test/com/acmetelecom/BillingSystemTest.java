@@ -267,8 +267,6 @@ public class BillingSystemTest {
 	
 	//Tests that costs can be calculated for different price plans
 	//when the call is in the peak and off peak time periods
-	//Everything is calculated as peak time which will need to be changed
-	//TODO
 	@Test
 	public void checkCallCostWhenCallStartsInOffPeakTimeAndEndsInPeakTime(){
 		customerList.add(customer1);
@@ -297,8 +295,6 @@ public class BillingSystemTest {
 		
 	//Tests that costs can be calculated for different price plans
 	//when the call is in the peak and off peak time periods
-	//Everything is calculated as peak time which will need to be changed
-	//TODO
 	@Test
 	public void checkCallCostWhenCallStartsInPeakTimeAndEndsInOffPeakTime(){
 		customerList.add(customer1);
@@ -327,8 +323,6 @@ public class BillingSystemTest {
 	
 	//Tests that costs can be calculated for different price plans
 	//when the call is in the peak and off peak time periods and lasts more than a day
-	//Everything is calculated as peak time which will need to be changed
-	//TODO
 	@Test
 	public void checkCallCostWhenCallStartsInOffPeakTimeAndEndsInOffPeakTimeButLastsMoreThanADay(){
 		customerList.add(customer1);
@@ -374,12 +368,12 @@ public class BillingSystemTest {
 		//peakSeconds=19hours, offPeakSeconds=12hours+11hours
 		long peakSeconds=19*60*60;
 		long offPeakSeconds=13*60*60;
-		final String expectedCost1 = calculateExpectedCost(tariff1,peakSeconds,offPeakSeconds);
+		final String expectedCost = calculateExpectedCost(tariff1,peakSeconds,offPeakSeconds);
 		
 		context.checking(new Expectations(){{
 			oneOf (customerDatabase).getCustomers(); will(returnValue(customerList));
 			oneOf (tariffLibrary).tarriffFor(customer1); will(returnValue(tariff1));
-			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost1), with(HtmlPrinter.getInstance()));
+			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost), with(HtmlPrinter.getInstance()));
 		}});
 		billingSystem.createCustomerBills();
 	}
@@ -437,7 +431,6 @@ public class BillingSystemTest {
 	}
 	
 	//Tests what happens if a CallStart event and the next CallEnd event have different Caller numbers and the same Callee
-	
 	@Test
 	public void checkCallStartWithADifferentNumberAndCallEndWithTheSame(){
 		customerList.add(customer1);

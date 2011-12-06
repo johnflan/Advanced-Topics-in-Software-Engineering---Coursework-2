@@ -27,18 +27,23 @@ public class Call implements iCall{
     }
     
     public long durationPeakSeconds() {
-  		DateTime peakStart=new DateTime(startTime().withTime(DaytimePeakPeriod.PEAK_RATE_START_TIME, 0,0,0));
-  		DateTime peakEnd=new DateTime(startTime().withTime(DaytimePeakPeriod.OFF_PEAK_RATE_START_TIME,0,0,0));
+  		DateTime startTime = startTime();
+  		DateTime endTime = endTime();
+  		
+		DateTime peakStart=new DateTime(startTime.withTime(DaytimePeakPeriod.PEAK_RATE_START_TIME, 0,0,0));
+  		DateTime peakEnd=new DateTime(startTime.withTime(DaytimePeakPeriod.OFF_PEAK_RATE_START_TIME,0,0,0));
   		Interval callInterval;
-  		if (startTime().isBefore(endTime()))
-  			callInterval=new Interval(startTime(), endTime());
+  		
+		if (startTime.isBefore(endTime))
+  			callInterval=new Interval(startTime, endTime);
   		else return 0;
   		long peakSeconds=0;
-  		long daysBetween=new Duration(startTime(), endTime()).getStandardDays();
+  		long daysBetween=new Duration(startTime, endTime).getStandardDays();
   		
   		for (int i=0;i<=daysBetween;i++){
   			Interval peakHours=new Interval(peakStart.plusDays(i),peakEnd.plusDays(i));
   			Interval overlapWithPeak = callInterval.overlap(peakHours);
+
   			if (overlapWithPeak != null)
   				peakSeconds+=overlapWithPeak.toDuration().getStandardSeconds();
   		}
@@ -47,8 +52,10 @@ public class Call implements iCall{
     
     public long durationOffPeakSeconds() { 	
     	long between=0;
-    	if (startTime().isBefore(endTime()))
-    		between=new Duration(startTime(),endTime()).getStandardSeconds();
+    	DateTime startTime = startTime();
+		DateTime endTime = endTime();
+		if (startTime.isBefore(endTime))
+    		between=new Duration(startTime,endTime).getStandardSeconds();
     	return between-durationPeakSeconds();
     }
 
