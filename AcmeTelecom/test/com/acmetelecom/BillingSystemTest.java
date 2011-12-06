@@ -13,6 +13,7 @@ import java.util.List;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.internal.State;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -60,13 +61,18 @@ public class BillingSystemTest {
 	Tariff tariff3 = Tariff.Leisure;
 	
 	//Dates for 3 calls
-	Date startDateOffPeak1 = new Date(111,0,0,0,0,0);
-	Date startDateOffPeak2 = new Date(111,0,5,0,0,0);
-	Date startDateOffPeak3 = new Date(111,0,10,0,0,0);
-	Date endDateOffPeak1 = new Date(111,0,0,0,1,0);
-	Date endDateOffPeak2 = new Date(111,0,5,0,1,0);
-	Date endDateOffPeak3 = new Date(111,0,10,0,1,0);
+/*	DateTime startDateOffPeak1 = new DateTime(2011,1,1,0,0,0);
+	DateTime startDateOffPeak2 = new DateTime(2011,1,5,0,0,0);
+	DateTime startDateOffPeak3 = new DateTime(2011,1,10,0,0,0);
+	DateTime endDateOffPeak1 = new DateTime(2011,1,1,0,1,0);
+	DateTime endDateOffPeak2 = new DateTime(2011,1,5,0,1,0);
+	DateTime endDateOffPeak3 = new DateTime(2011,1,10,0,1,0);*/
 	
+	DateTime peakDateTime1;
+	DateTime offPeakDateTime1;
+	DateTime offPeakDateTime2;
+	DateTime peakDateTime2;
+	DateTime offPeakDateTime3;
 	@Before
 	public void setUp(){
 		customerDatabase = context.mock(CustomerDatabase.class);
@@ -74,6 +80,12 @@ public class BillingSystemTest {
 		calls = context.mock(iCall.class);
 		billGenerator = context.mock(iBillGenerator.class);
 		billingSystem = new BillingSystem(customerDatabase, tariffLibrary, billGenerator);
+		peakDateTime1 = new DateTime(2011,1,1,9,0,0);
+		peakDateTime2 = new DateTime(2011,1,1,15,0,0);
+		offPeakDateTime1 = new DateTime(2011,1,1,5,30,0);
+		offPeakDateTime2 = new DateTime(2011,1,1,6,0,0);
+		offPeakDateTime3 = new DateTime(2011,1,1,20,0,0);
+		//DateTime peakDateTime = new DateTime(2011,1,1,5,0,0);
 	}
 	
 	//Checks that call events can be added in the log
@@ -102,14 +114,15 @@ public class BillingSystemTest {
 	public void checkWhatHappensIfSomeoneCallsHimself(){
 		customerList.add(customer1);
 		List<CallEvent> callLog = new ArrayList<CallEvent>();
-		System.out.println(startDateOffPeak1.getTime());
-		FakeCallStart callStart = new FakeCallStart("111111111111","111111111111",startDateOffPeak1.getTime());
+		//System.out.println(offPeakDateTime1.getMillis());
+		FakeCallStart callStart = new FakeCallStart("111111111111","111111111111",offPeakDateTime1.getMillis());
 		callLog.add(callStart);
-		FakeCallEnd callEnd=new FakeCallEnd("111111111111","111111111111",endDateOffPeak1.getTime());
+		FakeCallEnd callEnd=new FakeCallEnd("111111111111","111111111111",offPeakDateTime1.plusSeconds(250).getMillis());
 		callLog.add(callEnd);
 		billingSystem.setCallLog(callLog);
 		
-		final String expectedCost = calculateExpectedCost(tariff1,0,60);
+		long peakSeconds=250;
+		final String expectedCost = calculateExpectedCost(tariff1,0,peakSeconds);
 		
 		context.checking(new Expectations(){{
 			oneOf (customerDatabase).getCustomers(); will(returnValue(customerList));
@@ -125,15 +138,15 @@ public class BillingSystemTest {
 	public void checkWhatHappensIfWeHaveTwoCallStartsAndOneCallEnd(){
 		customerList.add(customer1);
 		List<CallEvent> callLog = new ArrayList<CallEvent>();
-		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",startDateOffPeak1.getTime());
+		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",peakDateTime1.getMillis());
 		callLog.add(callStart);
-		callStart = new FakeCallStart("111111111111","222222222222",startDateOffPeak2.getTime());
+		callStart = new FakeCallStart("111111111111","222222222222",peakDateTime2.getMillis());
 		callLog.add(callStart);
-		FakeCallEnd callEnd=new FakeCallEnd("111111111111","222222222222",endDateOffPeak2.getTime());
+		FakeCallEnd callEnd=new FakeCallEnd("111111111111","222222222222",peakDateTime2.plusSeconds(60).getMillis());
 		callLog.add(callEnd);
 		billingSystem.setCallLog(callLog);
-		
-		final String expectedCost = calculateExpectedCost(tariff1,0,60);
+		long peakSeconds=60;
+		final String expectedCost = calculateExpectedCost(tariff1,peakSeconds,0);
 		
 		context.checking(new Expectations(){{
 			oneOf (customerDatabase).getCustomers(); will(returnValue(customerList));
@@ -150,15 +163,16 @@ public class BillingSystemTest {
 		customerList.add(customer1);
 		
 		List<CallEvent> callLog = new ArrayList<CallEvent>();
-		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",startDateOffPeak1.getTime());
+		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",peakDateTime1.getMillis());
 		callLog.add(callStart);
-		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",endDateOffPeak1.getTime());
+		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",peakDateTime1.plusSeconds(25).getMillis());
 		callLog.add(callEnd);
-		callEnd=new FakeCallEnd("111111111111","222222222222",endDateOffPeak2.getTime());
+		callEnd=new FakeCallEnd("111111111111","222222222222",peakDateTime1.plusSeconds(35).getMillis());
 		callLog.add(callEnd);
 		billingSystem.setCallLog(callLog);
 		
-		final String expectedCost = calculateExpectedCost(tariff1,0,60);
+		long peakSeconds=25;
+		final String expectedCost = calculateExpectedCost(tariff1,peakSeconds,0);
 		
 		context.checking(new Expectations(){{
 			oneOf (customerDatabase).getCustomers(); will(returnValue(customerList));
@@ -178,9 +192,9 @@ public class BillingSystemTest {
 		customerList.add(customer1b);
 		
 		List<CallEvent> callLog = new ArrayList<CallEvent>();
-		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",startDateOffPeak1.getTime());
+		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",offPeakDateTime1.getMillis());
 		callLog.add(callStart);
-		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",endDateOffPeak1.getTime());
+		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",offPeakDateTime1.plusSeconds(60).getMillis());
 		callLog.add(callEnd);
 		billingSystem.setCallLog(callLog);
 		
@@ -212,7 +226,6 @@ public class BillingSystemTest {
 		final String expectedCost2 = calculateExpectedCost(tariff2,60,0);
 		final String expectedCost3 = calculateExpectedCost(tariff3,60,0);
 		
-		
 		context.checking(new Expectations(){{
 			oneOf (customerDatabase).getCustomers(); will(returnValue(customerList));
 			oneOf (tariffLibrary).tarriffFor(customer1); will(returnValue(tariff1));
@@ -233,10 +246,11 @@ public class BillingSystemTest {
 		customerList.add(customer2);
 		customerList.add(customer3);
 		initializeAllCallsForOffPeak();
-		
-		final String expectedCost1 = calculateExpectedCost(tariff1,0,60);
-		final String expectedCost2 = calculateExpectedCost(tariff2,0,60);
-		final String expectedCost3 = calculateExpectedCost(tariff3,0,60);
+		//Call duration=1 hour
+		long offPeakSeconds=1*60*60;
+		final String expectedCost1 = calculateExpectedCost(tariff1,0,offPeakSeconds);
+		final String expectedCost2 = calculateExpectedCost(tariff2,0,offPeakSeconds);
+		final String expectedCost3 = calculateExpectedCost(tariff3,0,offPeakSeconds);
 		
 		context.checking(new Expectations(){{
 			oneOf (customerDatabase).getCustomers(); will(returnValue(customerList));
@@ -261,10 +275,12 @@ public class BillingSystemTest {
 		customerList.add(customer2);
 		customerList.add(customer3);
 		initializeAllCallsForOffPeakToPeak();
-		
-		final String expectedCost1 = calculateExpectedCost(tariff1,50,0);
-		final String expectedCost2 = calculateExpectedCost(tariff2,50,0);
-		final String expectedCost3 = calculateExpectedCost(tariff3,50,0);
+		//peakSeconds=2hours, offPeakSeconds=1.5hours
+		long peakSeconds=2*60*60;
+		long offPeakSeconds=30*60+60*60;
+		final String expectedCost1 = calculateExpectedCost(tariff1,peakSeconds,offPeakSeconds);
+		final String expectedCost2 = calculateExpectedCost(tariff2,peakSeconds,offPeakSeconds);
+		final String expectedCost3 = calculateExpectedCost(tariff3,peakSeconds,offPeakSeconds);
 		
 		context.checking(new Expectations(){{
 			oneOf (customerDatabase).getCustomers(); will(returnValue(customerList));
@@ -275,29 +291,10 @@ public class BillingSystemTest {
 			oneOf (billGenerator).send(with(customer2), with(any(List.class)), with(expectedCost2), with(HtmlPrinter.getInstance()));
 			oneOf (billGenerator).send(with(customer3), with(any(List.class)), with(expectedCost3), with(HtmlPrinter.getInstance()));
 		}});
-		
+		System.out.println("Test expected cost: " + expectedCost1 + " --- for customer " + customer1.getFullName());
 		billingSystem.createCustomerBills();
 	}
-	@Test
-	public void checkCallCostWhenCallStartsInOffPeakTimeAndEndsInPeakTime1(){
-		customerList.add(customer1);
-
-		initializeAllCallsForOffPeakToPeak();
 		
-		final String expectedCost1 = calculateExpectedCost(tariff1,50,0);
-
-		
-		context.checking(new Expectations(){{
-			oneOf (customerDatabase).getCustomers(); will(returnValue(customerList));
-			oneOf (tariffLibrary).tarriffFor(customer1); will(returnValue(tariff1));
-
-			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost1), with(HtmlPrinter.getInstance()));
-
-		}});
-		
-		billingSystem.createCustomerBills();
-	}
-
 	//Tests that costs can be calculated for different price plans
 	//when the call is in the peak and off peak time periods
 	//Everything is calculated as peak time which will need to be changed
@@ -307,11 +304,13 @@ public class BillingSystemTest {
 		customerList.add(customer1);
 		customerList.add(customer2);
 		customerList.add(customer3);
-		initializeAllCallsForOffPeakToPeak();
-		
-		final String expectedCost1 = calculateExpectedCost(tariff1,50,0);
-		final String expectedCost2 = calculateExpectedCost(tariff2,50,0);
-		final String expectedCost3 = calculateExpectedCost(tariff3,50,0);
+		initializeAllCallsForPeakToOffPeak();
+		//peakSeconds=4hours, offPeakSeconds=1hour
+		long peakSeconds=4*60*60;
+		long offPeakSeconds=1*60*60;
+		final String expectedCost1 = calculateExpectedCost(tariff1,peakSeconds,offPeakSeconds);
+		final String expectedCost2 = calculateExpectedCost(tariff2,peakSeconds,offPeakSeconds);
+		final String expectedCost3 = calculateExpectedCost(tariff3,peakSeconds,offPeakSeconds);
 		
 		context.checking(new Expectations(){{
 			oneOf (customerDatabase).getCustomers(); will(returnValue(customerList));
@@ -338,9 +337,11 @@ public class BillingSystemTest {
 		initializeAllCallsForOffPeakToOffPeak();
 		
 		//Calls last for one day and 23 hours
-		final String expectedCost1 = calculateExpectedCost(tariff1,47*60*60,0);
-		final String expectedCost2 = calculateExpectedCost(tariff2,47*60*60,0);
-		final String expectedCost3 = calculateExpectedCost(tariff3,47*60*60,0);
+		long peakSeconds=24*60*60;
+		long offPeakSeconds=23*60*60;
+		final String expectedCost1 = calculateExpectedCost(tariff1,peakSeconds,offPeakSeconds);
+		final String expectedCost2 = calculateExpectedCost(tariff2,peakSeconds,offPeakSeconds);
+		final String expectedCost3 = calculateExpectedCost(tariff3,peakSeconds,offPeakSeconds);
 		
 		context.checking(new Expectations(){{
 			oneOf (customerDatabase).getCustomers(); will(returnValue(customerList));
@@ -351,10 +352,85 @@ public class BillingSystemTest {
 			oneOf (billGenerator).send(with(customer2), with(any(List.class)), with(expectedCost2), with(HtmlPrinter.getInstance()));
 			oneOf (billGenerator).send(with(customer3), with(any(List.class)), with(expectedCost3), with(HtmlPrinter.getInstance()));
 		}});
-		
+		//System.out.println("Expected Cost: "+expectedCost1);
 		billingSystem.createCustomerBills();
 	}
-
+	@Test
+	public void checkCallCostOverChangeOfYear(){
+		customerList.add(customer1);
+		DateTime dateBefore = new DateTime(2011,12,31,6,0,0);
+		DateTime dateAfter = new DateTime(2012,1,1,14,0,0);
+		
+		List<CallEvent> callLog = new ArrayList<CallEvent>();
+		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",dateBefore.getMillis());
+		callLog.add(callStart);
+		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",dateAfter.getMillis());
+		callLog.add(callEnd);
+		billingSystem.setCallLog(callLog);
+		
+		//Calls last for one day and 23 hours
+		//peakSeconds=19hours, offPeakSeconds=12hours+11hours
+		long peakSeconds=19*60*60;
+		long offPeakSeconds=13*60*60;
+		final String expectedCost1 = calculateExpectedCost(tariff1,peakSeconds,offPeakSeconds);
+		
+		context.checking(new Expectations(){{
+			oneOf (customerDatabase).getCustomers(); will(returnValue(customerList));
+			oneOf (tariffLibrary).tarriffFor(customer1); will(returnValue(tariff1));
+			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost1), with(HtmlPrinter.getInstance()));
+		}});
+		billingSystem.createCustomerBills();
+	}
+	
+	//Test what happens if a CallEnd event is earlier than a CallStart event. Call cost should be 0.0
+	@Test
+	public void checkCallEndBeforeCallStart(){
+		customerList.add(customer1);
+		
+		List<CallEvent> callLog = new ArrayList<CallEvent>();
+		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",peakDateTime1.getMillis());
+		callLog.add(callStart);
+		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",peakDateTime1.minusMinutes(2).getMillis());
+		callLog.add(callEnd);
+		billingSystem.setCallLog(callLog);
+		
+		//peakSeconds=0, offPeakSeconds=0
+		long peakSeconds=0;
+		long offPeakSeconds=0;
+		final String expectedCost1 = calculateExpectedCost(tariff1,peakSeconds,offPeakSeconds);
+		
+		context.checking(new Expectations(){{
+			oneOf (customerDatabase).getCustomers(); will(returnValue(customerList));
+			oneOf (tariffLibrary).tarriffFor(customer1); will(returnValue(tariff1));
+			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost1), with(HtmlPrinter.getInstance()));
+		}});
+		billingSystem.createCustomerBills();
+	}
+	
+	//Tests the cost for a call that lasts only one seconds. Call cost should be 0.0
+	@Test
+	public void checkCostOfOffPeakCallThatLastsOneSecond(){
+		customerList.add(customer1);
+		
+		List<CallEvent> callLog = new ArrayList<CallEvent>();
+		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",offPeakDateTime1.getMillis());
+		callLog.add(callStart);
+		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",offPeakDateTime1.plusSeconds(1).getMillis());
+		callLog.add(callEnd);
+		billingSystem.setCallLog(callLog);
+		
+		//peakSeconds=0, offPeakSeconds=0
+		long peakSeconds=0;
+		long offPeakSeconds=1;
+		final String expectedCost1 = calculateExpectedCost(tariff1,peakSeconds,offPeakSeconds);
+		context.checking(new Expectations(){{
+			oneOf (customerDatabase).getCustomers(); will(returnValue(customerList));
+			oneOf (tariffLibrary).tarriffFor(customer1); will(returnValue(tariff1));
+			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost1), with(HtmlPrinter.getInstance()));
+		}});
+		billingSystem.createCustomerBills();
+	}
+	
 	public String calculateExpectedCost(Tariff tariff, long peakSeconds, long offPeakSeconds){
 		BigDecimal peakCost = tariff.peakRate().multiply(new BigDecimal(peakSeconds));
 		BigDecimal offPeakCost = tariff.offPeakRate().multiply(new BigDecimal(offPeakSeconds));
@@ -366,124 +442,124 @@ public class BillingSystemTest {
 	///////////////////// Initializing Calls ////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 	private void initializeAllCallsForPeak() {
-		Date startDatePeak1 = new Date(111,1,1,10,0,0);
-		Date startDatePeak2 = new Date(111,0,5,10,0,0);
-		Date startDatePeak3 = new Date(111,0,10,10,0,0);
-		Date endDatePeak1 = new Date(111,1,1,10,1,0);
-		Date endDatePeak2 = new Date(111,0,5,10,1,0);
-		Date endDatePeak3 = new Date(111,0,10,10,1,0);
+/*		DateTime startDatePeak1 = new DateTime(2011,1,1,10,0,0);
+		DateTime startDatePeak2 = new DateTime(2011,1,5,10,0,0);
+		DateTime startDatePeak3 = new DateTime(2011,1,10,10,0,0);
+		DateTime endDatePeak1 = new DateTime(2011,1,1,10,1,0);
+		DateTime endDatePeak2 = new DateTime(2011,1,5,10,1,0);
+		DateTime endDatePeak3 = new DateTime(2011,1,10,10,1,0);*/
 		
 		List<CallEvent> callLog = new ArrayList<CallEvent>();
-		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",startDatePeak1.getTime());
+		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",peakDateTime1.getMillis());
 		callLog.add(callStart);
-		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",endDatePeak1.getTime());
+		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",peakDateTime1.plusMinutes(1).getMillis());
 		callLog.add(callEnd);
 		
-		callStart = new FakeCallStart("222222222222","333333333333",startDatePeak2.getTime());
+		callStart = new FakeCallStart("222222222222","333333333333",peakDateTime2.getMillis());
 		callLog.add(callStart);
-		callEnd = new FakeCallEnd("222222222222","333333333333",endDatePeak2.getTime());
+		callEnd = new FakeCallEnd("222222222222","333333333333",peakDateTime2.plusMinutes(1).getMillis());
 		callLog.add(callEnd);
 		
-		callStart = new FakeCallStart("333333333333","222222222222",startDatePeak3.getTime());
+		callStart = new FakeCallStart("333333333333","222222222222",peakDateTime1.getMillis());
 		callLog.add(callStart);
-		callEnd = new FakeCallEnd("333333333333","222222222222",endDatePeak3.getTime());
+		callEnd = new FakeCallEnd("333333333333","222222222222",peakDateTime1.plusMinutes(1).getMillis());
 		callLog.add(callEnd);
 		billingSystem.setCallLog(callLog);
 	}
 	
 	private void initializeAllCallsForOffPeak() {
 		List<CallEvent> callLog = new ArrayList<CallEvent>();
-		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",startDateOffPeak1.getTime());
+		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",offPeakDateTime1.getMillis());
 		callLog.add(callStart);
-		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",endDateOffPeak1.getTime());
+		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",offPeakDateTime1.plusHours(1).getMillis());
 		callLog.add(callEnd);
 		
-		callStart = new FakeCallStart("222222222222","333333333333",startDateOffPeak2.getTime());
+		callStart = new FakeCallStart("222222222222","333333333333",offPeakDateTime1.getMillis());
 		callLog.add(callStart);
-		callEnd = new FakeCallEnd("222222222222","333333333333",endDateOffPeak2.getTime());
+		callEnd = new FakeCallEnd("222222222222","333333333333",offPeakDateTime1.plusHours(1).getMillis());
 		callLog.add(callEnd);
 		
-		callStart = new FakeCallStart("333333333333","222222222222",startDateOffPeak3.getTime());
+		callStart = new FakeCallStart("333333333333","222222222222",offPeakDateTime1.getMillis());
 		callLog.add(callStart);
-		callEnd = new FakeCallEnd("333333333333","222222222222",endDateOffPeak3.getTime());
+		callEnd = new FakeCallEnd("333333333333","222222222222",offPeakDateTime1.plusHours(1).getMillis());
 		callLog.add(callEnd);
 		billingSystem.setCallLog(callLog);
 	}
 	
 	private void initializeAllCallsForPeakToOffPeak() {
-		Date startDatePeak1 = new Date(111,0,0,18,59,40);
-		Date startDatePeak2 = new Date(111,0,5,18,59,40);
-		Date startDatePeak3 = new Date(111,0,10,18,59,40);
-		Date endDateOffPeak1 = new Date(111,0,0,19,0,30);
-		Date endDateOffPeak2 = new Date(111,0,5,19,0,30);
-		Date endDateOffPeak3 = new Date(111,0,10,19,0,30);
+/*		DateTime startDatePeak1 = new DateTime(2011,1,1,18,59,40);
+		DateTime startDatePeak2 = new DateTime(2011,1,5,18,59,40);
+		DateTime startDatePeak3 = new DateTime(2011,1,10,18,59,40);
+		DateTime endDateOffPeak1 = new DateTime(2011,1,1,19,0,30);
+		DateTime endDateOffPeak2 = new DateTime(2011,1,5,19,0,30);
+		DateTime endDateOffPeak3 = new DateTime(2011,1,10,19,0,30);*/
 		
 		List<CallEvent> callLog = new ArrayList<CallEvent>();
-		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",startDatePeak1.getTime());
+		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",peakDateTime2.getMillis());
 		callLog.add(callStart);
-		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",endDateOffPeak1.getTime());
+		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",offPeakDateTime3.getMillis());
 		callLog.add(callEnd);
 		
-		callStart = new FakeCallStart("222222222222","333333333333",startDatePeak2.getTime());
+		callStart = new FakeCallStart("222222222222","333333333333",peakDateTime2.getMillis());
 		callLog.add(callStart);
-		callEnd = new FakeCallEnd("222222222222","333333333333",endDateOffPeak2.getTime());
+		callEnd = new FakeCallEnd("222222222222","333333333333",offPeakDateTime3.getMillis());
 		callLog.add(callEnd);
 		
-		callStart = new FakeCallStart("333333333333","222222222222",startDatePeak3.getTime());
+		callStart = new FakeCallStart("333333333333","222222222222",peakDateTime2.getMillis());
 		callLog.add(callStart);
-		callEnd = new FakeCallEnd("333333333333","222222222222",endDateOffPeak3.getTime());
+		callEnd = new FakeCallEnd("333333333333","222222222222",offPeakDateTime3.getMillis());
 		callLog.add(callEnd);
 		billingSystem.setCallLog(callLog);
 	}
 	
 	private void initializeAllCallsForOffPeakToPeak() {
-		Date startDateOffPeak1 = new Date(111,0,0,6,59,40);
-		Date startDateOffPeak2 = new Date(111,0,5,6,59,40);
-		Date startDateOffPeak3 = new Date(111,0,10,6,59,40);
-		Date endDatePeak1 = new Date(111,0,0,7,0,30);
-		Date endDatePeak2 = new Date(111,0,5,7,0,30);
-		Date endDatePeak3 = new Date(111,0,10,7,0,30);
+/*		DateTime startDateOffPeak1 = new DateTime(2011,1,1,6,59,40);
+		DateTime startDateOffPeak2 = new DateTime(2011,1,5,6,59,40);
+		DateTime startDateOffPeak3 = new DateTime(2011,1,10,6,59,40);
+		DateTime endDatePeak1 = new DateTime(2011,1,1,7,0,30);
+		DateTime endDatePeak2 = new DateTime(2011,1,5,7,0,30);
+		DateTime endDatePeak3 = new DateTime(2011,1,10,7,0,30);*/
 		
 		List<CallEvent> callLog = new ArrayList<CallEvent>();
-		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",startDateOffPeak1.getTime());
+		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",offPeakDateTime1.getMillis());
 		callLog.add(callStart);
-		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",endDatePeak1.getTime());
+		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",peakDateTime1.getMillis());
 		callLog.add(callEnd);
 		
-		callStart = new FakeCallStart("222222222222","333333333333",startDateOffPeak2.getTime());
+		callStart = new FakeCallStart("222222222222","333333333333",offPeakDateTime1.getMillis());
 		callLog.add(callStart);
-		callEnd = new FakeCallEnd("222222222222","333333333333",endDatePeak2.getTime());
+		callEnd = new FakeCallEnd("222222222222","333333333333",peakDateTime1.getMillis());
 		callLog.add(callEnd);
 		
-		callStart = new FakeCallStart("333333333333","222222222222",startDateOffPeak3.getTime());
+		callStart = new FakeCallStart("333333333333","222222222222",offPeakDateTime1.getMillis());
 		callLog.add(callStart);
-		callEnd = new FakeCallEnd("333333333333","222222222222",endDatePeak3.getTime());
+		callEnd = new FakeCallEnd("333333333333","222222222222",peakDateTime1.getMillis());
 		callLog.add(callEnd);
 		billingSystem.setCallLog(callLog);
 	}
 	
 	private void initializeAllCallsForOffPeakToOffPeak() {
-		Date startDateOffPeak1 = new Date(111,0,0,6,0,0);
-		Date startDateOffPeak2 = new Date(111,0,5,6,0,0);
-		Date startDateOffPeak3 = new Date(111,0,10,6,0,0);
-		Date endDateOffPeak1 = new Date(111,0,2,5,0,0);
-		Date endDateOffPeak2 = new Date(111,0,7,5,0,0);
-		Date endDateOffPeak3 = new Date(111,0,12,5,0,0);
+/*		DateTime startDateOffPeak1 = new DateTime(2011,1,1,6,0,0);
+		DateTime startDateOffPeak2 = new DateTime(2011,1,5,6,0,0);
+		DateTime startDateOffPeak3 = new DateTime(2011,1,10,6,0,0);
+		DateTime endDateOffPeak1 = new DateTime(2011,1,3,5,0,0);
+		DateTime endDateOffPeak2 = new DateTime(2011,1,7,5,0,0);
+		DateTime endDateOffPeak3 = new DateTime(2011,1,12,5,0,0);*/
 		
 		List<CallEvent> callLog = new ArrayList<CallEvent>();
-		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",startDateOffPeak1.getTime());
+		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",offPeakDateTime1.getMillis());
 		callLog.add(callStart);
-		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",endDateOffPeak1.getTime());
+		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",offPeakDateTime1.plusDays(1).plusHours(23).getMillis());
 		callLog.add(callEnd);
 		
-		callStart = new FakeCallStart("222222222222","333333333333",startDateOffPeak2.getTime());
+		callStart = new FakeCallStart("222222222222","333333333333",offPeakDateTime1.getMillis());
 		callLog.add(callStart);
-		callEnd = new FakeCallEnd("222222222222","333333333333",endDateOffPeak2.getTime());
+		callEnd = new FakeCallEnd("222222222222","333333333333",offPeakDateTime1.plusDays(1).plusHours(23).getMillis());
 		callLog.add(callEnd);
 		
-		callStart = new FakeCallStart("333333333333","222222222222",startDateOffPeak3.getTime());
+		callStart = new FakeCallStart("333333333333","222222222222",offPeakDateTime1.getMillis());
 		callLog.add(callStart);
-		callEnd = new FakeCallEnd("333333333333","222222222222",endDateOffPeak3.getTime());
+		callEnd = new FakeCallEnd("333333333333","222222222222",offPeakDateTime1.plusDays(1).plusHours(23).getMillis());
 		callLog.add(callEnd);
 		billingSystem.setCallLog(callLog);
 	}

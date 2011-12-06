@@ -124,33 +124,26 @@ public class BillingSystem {
 
         BigDecimal totalBill = new BigDecimal(0);
         List<LineItem> items = new ArrayList<LineItem>();
-        //DaytimePeakPeriod peakPeriod=new DaytimePeakPeriod();
+
         for (Call call : calls) {
         	
             Tariff tariff = centralTariffDatabase.tarriffFor(customer);
             
             BigDecimal cost = BigDecimal.ZERO;
            
-//           if (peakPeriod.offPeak(call.startTime()) && peakPeriod.offPeak(call.endTime()) && call.durationSeconds() < 12 * 60 * 60) {
-//                cost = new BigDecimal(call.durationSeconds()).multiply(tariff.offPeakRate());
-//            } else {
-//                cost = new BigDecimal(call.durationSeconds()).multiply(tariff.peakRate());
-//            }
-            System.out.println("PeakSeconds: "+call.durationPeakSeconds());
-            System.out.println("OffPeakSeconds: "+call.durationOffPeakSeconds());
             BigDecimal costPeak = new BigDecimal(call.durationPeakSeconds()).multiply(tariff.peakRate());
             BigDecimal costOffPeak = new BigDecimal(call.durationOffPeakSeconds()).multiply(tariff.offPeakRate());
             
             cost=costPeak.add(costOffPeak);
-            //System.out.println("COST: "+ MoneyFormatter.penceToPounds(cost));
             
             cost = cost.setScale(0, RoundingMode.HALF_UP);
+            
             BigDecimal callCost = cost;
+            
             totalBill = totalBill.add(callCost);
             
             items.add(new LineItem(call, callCost));
         }
-        System.out.println("Actual cost: " + MoneyFormatter.penceToPounds(totalBill) );
         billGenerator.send(customer, items, MoneyFormatter.penceToPounds(totalBill), HtmlPrinter.getInstance());
     }
 }

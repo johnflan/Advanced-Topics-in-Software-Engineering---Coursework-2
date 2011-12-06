@@ -63,7 +63,7 @@ public class CallTest{
 		
 		String realFormat = call.date();
 		
-		assertEquals("01/01/11 00:00", realFormat);
+		assertEquals("1/1/11 12:00 AM", realFormat);
 		assertFalse(realFormat.equals("00:00 01/01/11"));
 		assertFalse(realFormat.equals("1/1/11 00:00"));
 	}
