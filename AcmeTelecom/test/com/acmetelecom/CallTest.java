@@ -13,18 +13,26 @@ import com.acmetelecom.iCallStart;
 
 public class CallTest{
 	Mockery context = new Mockery();
-	final iCallStart callStart = context.mock(iCallStart.class);
-	final iCallEnd callEnd = context.mock(iCallEnd.class);
-	
-	final BillingSystem billingSystem = new BillingSystem();
-	final Call call = new Call(callStart, callEnd);
-	
+	iCallStart callStart;
+	iCallEnd callEnd;
+	Call call;
+	BillingSystem billingSystem;
+
 	long millisStart;
 	long millisEnd;
 	long durationSeconds;
 	
 	@Before
 	public void setUp() throws Exception{
+		callStart = context.mock(iCallStart.class);
+		callEnd = context.mock(iCallEnd.class);
+		call = new Call(callStart, callEnd);
+		billingSystem = new BillingSystem();
+		
+		//Peak & Off Peak periods for the tests
+		DaytimePeakPeriod.PEAK_RATE_START_TIME = 7;
+		DaytimePeakPeriod.OFF_PEAK_RATE_START_TIME = 19;
+		
 		DateTime dt = new DateTime(2011,1,1, 0, 0);
 		millisStart = dt.getMillis();
 		millisEnd = millisStart + 60000;

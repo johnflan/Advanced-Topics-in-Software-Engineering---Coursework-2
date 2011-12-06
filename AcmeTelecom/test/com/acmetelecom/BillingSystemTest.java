@@ -73,12 +73,16 @@ public class BillingSystemTest {
 		calls = context.mock(iCall.class);
 		billGenerator = context.mock(iBillGenerator.class);
 		billingSystem = new BillingSystem(customerDatabase, tariffLibrary, billGenerator);
+		
+		//Peak & Off Peak periods for the tests
+		DaytimePeakPeriod.PEAK_RATE_START_TIME = 7;
+		DaytimePeakPeriod.OFF_PEAK_RATE_START_TIME = 19;
+		
 		peakDateTime1 = new DateTime(2011,1,1,9,0,0);
 		peakDateTime2 = new DateTime(2011,1,1,15,0,0);
 		offPeakDateTime1 = new DateTime(2011,1,1,5,30,0);
 		offPeakDateTime2 = new DateTime(2011,1,1,6,0,0);
 		offPeakDateTime3 = new DateTime(2011,1,1,20,0,0);
-		//DateTime peakDateTime = new DateTime(2011,1,1,5,0,0);
 	}
 	
 	//Checks that call events can be added in the log
@@ -411,6 +415,69 @@ public class BillingSystemTest {
 		//peakSeconds=1hour, offPeakSeconds=0
 		long peakSeconds= 1 * 60 * 60;
 		long offPeakSeconds=0;
+		final String expectedCost = calculateExpectedCost(tariff1,peakSeconds,offPeakSeconds);
+		
+		context.checking(new Expectations(){{
+			oneOf (customerDatabase).getCustomers(); will(returnValue(customerList));
+			oneOf (tariffLibrary).tarriffFor(customer1); will(returnValue(tariff1));
+			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost), with(HtmlPrinter.getInstance()));
+		}});
+		billingSystem.createCustomerBills();
+	}
+	
+	//Tests what happens if the Tariff of a customer changes after he has made a call
+	//The cost of all previous calls is calculated with the new Tariff which is wrong
+	//TODO
+	@Test
+	public void checkWhatHappensIfTariffChanges(){
+		customerList.add(customer1);
+
+		List<CallEvent> callLog = new ArrayList<CallEvent>();
+		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",peakDateTime1.getMillis());
+		callLog.add(callStart);
+		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",peakDateTime1.plusHours(1).getMillis());
+		callLog.add(callEnd);
+		billingSystem.setCallLog(callLog);
+		
+		//Tariff changes after the call
+		tariff1 = Tariff.Business;
+		
+		//peakSeconds=1hour, offPeakSeconds=0
+		long peakSeconds= 1 * 60 * 60;
+		long offPeakSeconds=0;
+		//The cost is calculated with the new Tariff
+		final String expectedCost = calculateExpectedCost(tariff1,peakSeconds,offPeakSeconds);
+		
+		context.checking(new Expectations(){{
+			oneOf (customerDatabase).getCustomers(); will(returnValue(customerList));
+			oneOf (tariffLibrary).tarriffFor(customer1); will(returnValue(tariff1));
+			oneOf (billGenerator).send(with(customer1), with(any(List.class)), with(expectedCost), with(HtmlPrinter.getInstance()));
+		}});
+		billingSystem.createCustomerBills();
+	}
+	
+	//Tests what happens if the Tariff of a customer changes after he has made a call
+	//The cost of all previous calls is calculated with the new Tariff which is wrong
+	//TODO
+	@Test
+	public void checkWhatHappensIfPeakTimesChanges(){
+		customerList.add(customer1);
+
+		//The call starts at 6am and ends at 7am
+		List<CallEvent> callLog = new ArrayList<CallEvent>();
+		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",offPeakDateTime2.getMillis());
+		callLog.add(callStart);
+		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",offPeakDateTime2.plusHours(1).getMillis());
+		callLog.add(callEnd);
+		billingSystem.setCallLog(callLog);
+		
+		//Peak & Off Peak periods for the tests change
+		DaytimePeakPeriod.PEAK_RATE_START_TIME = 6;
+		DaytimePeakPeriod.OFF_PEAK_RATE_START_TIME = 18;
+		
+		//peakSeconds=1hour, offPeakSeconds=0
+		long peakSeconds = 1 * 60 * 60;
+		long offPeakSeconds = 0;
 		final String expectedCost = calculateExpectedCost(tariff1,peakSeconds,offPeakSeconds);
 		
 		context.checking(new Expectations(){{
