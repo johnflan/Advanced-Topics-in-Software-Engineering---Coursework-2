@@ -112,12 +112,14 @@ public class BillingSystemTest {
 		customerList.add(customer1);
 		List<CallEvent> callLog = new ArrayList<CallEvent>();
 		//System.out.println(offPeakDateTime1.getMillis());
-		FakeCallStart callStart = new FakeCallStart("111111111111","111111111111",offPeakDateTime1.getMillis());
+		
+/*		FakeCallStart callStart = new FakeCallStart("111111111111","111111111111",offPeakDateTime1.getMillis());
 		callLog.add(callStart);
 		FakeCallEnd callEnd=new FakeCallEnd("111111111111","111111111111",offPeakDateTime1.plusSeconds(250).getMillis());
 		callLog.add(callEnd);
-		billingSystem.setCallLog(callLog);
-		
+		billingSystem.setCallLog(callLog);*/
+		billingSystem.startCall().atTime(offPeakDateTime1.getMillis()).from(customer1.getPhoneNumber()).to(customer1.getPhoneNumber());
+		billingSystem.endCall().atTime(offPeakDateTime1.plusSeconds(250).getMillis()).from(customer1.getPhoneNumber()).to(customer1.getPhoneNumber());
 		long peakSeconds=250;
 		final String expectedCost = calculateExpectedCost(tariff1,0,peakSeconds);
 		
@@ -135,14 +137,18 @@ public class BillingSystemTest {
 	@Test
 	public void checkWhatHappensIfWeHaveTwoCallStartsAndOneCallEnd(){
 		customerList.add(customer1);
-		List<CallEvent> callLog = new ArrayList<CallEvent>();
+/*		List<CallEvent> callLog = new ArrayList<CallEvent>();
 		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",peakDateTime1.getMillis());
 		callLog.add(callStart);
 		callStart = new FakeCallStart("111111111111","222222222222",peakDateTime2.getMillis());
 		callLog.add(callStart);
 		FakeCallEnd callEnd=new FakeCallEnd("111111111111","222222222222",peakDateTime2.plusSeconds(60).getMillis());
 		callLog.add(callEnd);
-		billingSystem.setCallLog(callLog);
+		billingSystem.setCallLog(callLog);*/
+		billingSystem.startCall().atTime(peakDateTime1.getMillis()).from(customer1.getPhoneNumber()).to(customer2.getPhoneNumber());
+		billingSystem.startCall().atTime(peakDateTime2.getMillis()).from(customer1.getPhoneNumber()).to(customer2.getPhoneNumber());
+		billingSystem.endCall().atTime(peakDateTime2.plusSeconds(60).getMillis()).from(customer1.getPhoneNumber()).to(customer2.getPhoneNumber());
+		
 		long peakSeconds=60;
 		final String expectedCost = calculateExpectedCost(tariff1,peakSeconds,0);
 		
@@ -523,13 +529,14 @@ public class BillingSystemTest {
 	public void checkCostOfOffPeakCallThatLastsOneSecond(){
 		customerList.add(customer1);
 		
-		List<CallEvent> callLog = new ArrayList<CallEvent>();
+/*		List<CallEvent> callLog = new ArrayList<CallEvent>();
 		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",offPeakDateTime1.getMillis());
 		callLog.add(callStart);
 		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",offPeakDateTime1.plusSeconds(1).getMillis());
 		callLog.add(callEnd);
-		billingSystem.setCallLog(callLog);
-		
+		billingSystem.setCallLog(callLog);*/
+		billingSystem.startCall().atTime(offPeakDateTime1.getMillis()).from("111111111111").to("222222222222");
+		billingSystem.endCall().atTime(offPeakDateTime1.plusSeconds(1).getMillis()).from("111111111111").to("222222222222");		
 		//peakSeconds=0, offPeakSeconds=1
 		long peakSeconds=0;
 		long offPeakSeconds=1;
@@ -541,7 +548,7 @@ public class BillingSystemTest {
 		}});
 		billingSystem.createCustomerBills();
 	}
-	
+		
 	public String calculateExpectedCost(Tariff tariff, long peakSeconds, long offPeakSeconds){
 		BigDecimal peakCost = tariff.peakRate().multiply(new BigDecimal(peakSeconds));
 		BigDecimal offPeakCost = tariff.offPeakRate().multiply(new BigDecimal(offPeakSeconds));
