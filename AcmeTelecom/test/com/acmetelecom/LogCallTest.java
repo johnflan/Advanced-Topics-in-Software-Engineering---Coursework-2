@@ -1,12 +1,10 @@
 package com.acmetelecom;
 
-import static org.junit.Assert.*;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.acmetelecom.customer.TariffLibrary;
 import com.acmetelecom.logcall.CallLogInterface;
 
 public class LogCallTest {
@@ -26,9 +24,6 @@ public class LogCallTest {
 	
 	@Test
 	public void testStartCall() {
-		
-		
-		
 		
 		context.checking(new Expectations(){{
 			oneOf (callLogger).callInitiated(caller, callee);

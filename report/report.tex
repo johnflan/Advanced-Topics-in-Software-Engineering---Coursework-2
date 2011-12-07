@@ -110,12 +110,12 @@ Implementation of the test fixtures required that some modifications be made to 
 
 \subsection{Unit Testing}
 
-Due to the critical nature of the Billing System it is important to ensure regressions are not introduced during development. Before beginning feature development we implemented unit tests across much of the code, this also was helpful for the developers to become familiar with the code-base. Having this test coverage will enable the team to move more quickly and confidently in a test driven framework with the feature development.
+Due to the critical nature of the Billing System it is important to ensure regressions are not introduced during development. Before beginning feature development we implemented unit tests across much of the code, this was also helpful for the developers to become familiar with the code-base. Having this test coverage will enable the team to move more quickly and confidently in a test driven framework with the feature development.
 
 Several unit testing frameworks are popular for Java e.g. JUnit and TestNG. These frameworks are quite similar, TestNG having the ability to execute tests in groups and begin slightly more configurable. Due to the teams experience with JUnit and the fact that Concordion integrates with it, JUnit was selected. In addition to the use of JUnit tests we also required a mechanism to ensure that the object under test is calling the correct methods on its dependency's, and to inject test data from those requests. The team members have had good previous experience using JMock and we employed its use in our testing infrastructure.
 
 \subsubsection{Unit test implementation}
-In order to test some some methods it was necessary to provide mock or dummy objects for classes that we did not wish to include in the test. This mocking out of extra functionality enabled more focused and comprehensive testing.
+In order to test some methods it was necessary to provide mock or dummy objects for classes that we did not wish to include in the test. This mocking out of extra functionality enabled more focused and comprehensive testing.
 
 For example in our testing of the BillingSystem.createCustomerBill(), there was an internal call to BillGenerator. We needed to ensure that BillGenerator was called, and confirm that it was called with the correct parameters but not execute any of its functionality. This type of testing resulted in us creating interfaces for many of the classes we were provided with. For the above example we created the BillGeneratorInterface for the corresponding BillGenerator.
 
@@ -130,6 +130,8 @@ During the initial unit testing we found several problems with the program’s l
 	\item If a customer’s price plan changes, then he is charged based on the new price plan for the previous calls he has made, because all call costs are calculated after the change and not when the call has been made.
 	\item If the peak and off peak hours are changed while the system is running (there are calls stored in the call log), then the call costs will be calculated based on the new peak/off peak periods.
 \end{enumerate}
+
+Using the EclEmma code coverage too for Eclipse we were able to visualise the coverage of our unit tests (screenshot attached in appendix). While code coverage is not a good measure of test comprehensiveness, it was useful for finding paths we had missed. The class we were least able to test was the Printer implementation HtmlPrinter, which outputted text to the screen using System.out.println(). We could have spend time redirecting the default system output or refactoring the class to inject an output device. We decided other areas of the system had greater priority for our efforts.
 
 Once the team was happy with the coverage of the test for the unmodified code, the unit tests were expanded to include the new cases that would occur because of the new feature. 
 
@@ -163,11 +165,11 @@ In the above diagram we simulate the case when the call starts at 17:00 in a spe
 \subsection{DSL like logging interface}
 During development it was found that the callInitiated() and callComplete() methods in the Billing System were prone to error. It was easy for a developer to initialise the call in the wrong order i.e. callInitiated(callee, caller), creating major billing issues.
 
-To combat this we redesigned the call logging interface. This new interface relies on the autocompletion features of modern IDE’s by returning the ‘this’ value cast to a particular interface. With this we used domain specific language to create interface.
+To combat this we redesigned the call logging interface. This new interface relies on the autocompletion features of modern IDE's by returning the 'this' value cast to a particular interface. With this we used domain specific language to create interface.
 \begin{lstlisting}
 	billingSystem.startCall().from(caller).to(callee);
 \end{lstlisting}
-To implement this feature a CallLogInterface interface was created, and the BillingSystem implemented this ‘role’. The startCall() method creates a new object which builds the data necessary to log an entry, and calls the callInitiated() method of BillingSystem.
+To implement this feature a CallLogInterface interface was created, and the BillingSystem implemented this 'role'. The startCall() method creates a new object which builds the data necessary to log an entry, and calls the callInitiated() method of BillingSystem.
 
 To direct new users to this interface and maintain backwards compatibility we added Javadoc and the @deprecated annotation to the callInitiated()  and callComplete() methods. It would have been possible to go even further an create mini-types for the call data, but we felt this would have been too great of a change for this release.
 
@@ -179,7 +181,8 @@ The file is loaded through a loadConfigurationProperties() method that is called
 \begin{lstlisting}
 props.load(new FileInputStream("billing_system.properties"));
 if(props.containsKey(PEAK_RATE_START_TIME))
-	peak_rate_start = props.getProperty(PEAK_RATE_START_TIME);	if(props.containsKey(OFF_PEAK_RATE_START_TIME))
+	peak_rate_start = props.getProperty(PEAK_RATE_START_TIME);
+if(props.containsKey(OFF_PEAK_RATE_START_TIME))
      	off_peak_rate_start = props.getProperty(OFF_PEAK_RATE_START_TIME);
 if (off_peak_rate_start == null || peak_rate_start == null)
 	throw new Exception("Configuration error!");	
@@ -192,9 +195,9 @@ Refactoring the code to implement the changes was difficult using the standard J
 
 An example of using JodaTime DateTime:
 \begin{lstlisting}
-	DateTime dtStartCall=new DateTime(); //new DateTime with the current time. 
-	CallStart callStart = new CallStart(phone1, phone2, dtStartCall);
-	CallEnd callEnd = new CallEnd(phone1, phone2, dtStartCall.plusSeconds(250));
+	DateTime dateTime = DateTime.parse(date, DateTimeFormat.forPattern("dd/MM/yy HH:mm:ss"));
+	billingSystem.startCall().atTime(dateTime.getMillis()).from(caller).to(callee);
+	billingSystem.endCall().atTime(dateTime.plusSeconds(durationSeconds).getMillis()).from(caller).to(callee);
 \end{lstlisting}
 
 Lastly, we made sure that this library is safe to be used in the system in terms of maturity. Under active development since 2002 (last release was in June this year) and it continues to receive new features and bug-fixes. Some other helpful classes and methods included in the JodaTime project are described next.
@@ -214,6 +217,7 @@ public boolean offPeak(DateTime time) {
 	return hour < peak_rate_start || hour >= off_peak_rate_start;
 }
 \end{lstlisting}
+\newpage
 \section{Appendix}
 
 \subsection{Source code}
@@ -223,9 +227,12 @@ The project is available at:
 https://github.com/johnflan/Advanced-Topics-in-Software-Engineering---Coursework-2
 \end{lstlisting}
 
+\subsection{Unit test coverage}
+\begin{center}
+	\includegraphics[scale=0.55]{images/emma_code_coverage_.png}
+\end{center}
+
 \subsection{Initial and Final dependency diagrams}
-
-
 
 \begin{center}
 	\includegraphics[scale=0.7]{images/Acme_Telecom_Structure.pdf}

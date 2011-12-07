@@ -1,10 +1,7 @@
 package com.acmetelecom;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -18,7 +15,6 @@ import org.jmock.Mockery;
 import com.acmetelecom.BillingSystem;
 import com.acmetelecom.BillGeneratorDummy;
 import com.acmetelecom.BillGeneratorInterface;
-import com.acmetelecom.CallInterface;
 import com.acmetelecom.customer.Customer;
 import com.acmetelecom.customer.CustomerDatabase;
 import com.acmetelecom.customer.Tariff;
