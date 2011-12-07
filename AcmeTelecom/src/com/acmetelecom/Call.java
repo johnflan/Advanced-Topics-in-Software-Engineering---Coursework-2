@@ -34,8 +34,10 @@ public class Call implements CallInterface{
   		else return 0;
   		long peakSeconds=0;
   		long daysBetween=new Duration(startTime, endTime).getStandardDays();
-  		if (daysBetween>0) daysBetween++;
-  		for (int i=0;i<=daysBetween;i++){
+  		long daysCovered=0;
+  		if (daysBetween>0) daysCovered=daysBetween+2;
+  		else daysCovered=1;
+  		for (int i=0;i<daysCovered;i++){
   			Interval peakHours=new Interval(peakStart.plusDays(i),peakEnd.plusDays(i));
   			Interval overlapWithPeak = callInterval.overlap(peakHours);
 
