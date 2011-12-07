@@ -4,6 +4,6 @@ import java.util.List;
 
 import com.acmetelecom.customer.Customer;
 
-public interface iBillGenerator {
+public interface BillGeneratorInterface {
 	 public void send(Customer customer, List<LineItem> calls, String totalBill, Printer printer);
 }

@@ -29,8 +29,8 @@ public class BillingSystemTest {
 	Mockery context = new Mockery();
 	CustomerDatabase customerDatabase;
 	TariffLibrary tariffLibrary;
-	iBillGenerator billGenerator;
-	iCall calls;
+	BillGeneratorInterface billGenerator;
+	CallInterface calls;
 	BillingSystem billingSystem;
 	
 	//Customers to be added in the fake database
@@ -64,8 +64,8 @@ public class BillingSystemTest {
 	public void setUp(){
 		customerDatabase = context.mock(CustomerDatabase.class);
 		tariffLibrary = context.mock(TariffLibrary.class);
-		calls = context.mock(iCall.class);
-		billGenerator = context.mock(iBillGenerator.class);
+		calls = context.mock(CallInterface.class);
+		billGenerator = context.mock(BillGeneratorInterface.class);
 		billingSystem = new BillingSystem(customerDatabase, tariffLibrary, billGenerator);
 		
 		//Peak & Off Peak periods for the tests
@@ -721,12 +721,12 @@ public class BillingSystemTest {
 	}*/
 	
 	//Classes needed to add fake calls in the log
-	private class FakeCallStart extends CallEvent implements iCallStart{
+	private class FakeCallStart extends CallEvent implements CallStartInterface{
 		public FakeCallStart(String caller, String callee, long fakeMillis) {
 			super(caller, callee, fakeMillis);
 		}
 	}
-	private class FakeCallEnd extends CallEvent implements iCallEnd{
+	private class FakeCallEnd extends CallEvent implements CallEndInterface{
 		public FakeCallEnd(String caller, String callee, long fakeMillis) {
 			super(caller, callee, fakeMillis);
 		}

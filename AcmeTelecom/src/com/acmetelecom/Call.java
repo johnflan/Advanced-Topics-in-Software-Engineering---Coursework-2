@@ -4,11 +4,11 @@ import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
 
-public class Call implements iCall{
-	  private iCallStart start;
-    private iCallEnd end;
+public class Call implements CallInterface{
+	  private CallStartInterface start;
+    private CallEndInterface end;
 
-    public Call(iCallStart start, iCallEnd end) {
+    public Call(CallStartInterface start, CallEndInterface end) {
         this.start = start;
         this.end = end;
     }

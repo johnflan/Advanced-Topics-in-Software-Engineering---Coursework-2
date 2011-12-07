@@ -1,7 +1,6 @@
 package com.acmetelecom.logcall;
 
 import com.acmetelecom.BillingSystem;
-import com.acmetelecom.CallLogInterface;
 
 public abstract class LogCall implements CallFrom, CallFromTo {
 	

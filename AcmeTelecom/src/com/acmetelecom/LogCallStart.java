@@ -1,25 +1,22 @@
 package com.acmetelecom;
 
+import com.acmetelecom.logcall.CallLogInterface;
 import com.acmetelecom.logcall.LogCall;
 
-public class StartCall extends LogCall{
+public class LogCallStart extends LogCall{
 	
-    public StartCall(CallLogInterface billingSystem) {
+    public LogCallStart(CallLogInterface billingSystem) {
 		super(billingSystem);
 	}
     
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void placeCallWithoutTimestamp() {
 		callLogger.callInitiated(super.caller, super.callee);
 		
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void placeCallWithTimestamp() {
 		callLogger.callInitiated(super.caller, super.callee, super.timeStamp);		
-	}
-
-	
+	}	
 }

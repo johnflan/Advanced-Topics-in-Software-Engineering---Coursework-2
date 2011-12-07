@@ -7,14 +7,14 @@ import org.jmock.*;
 import org.joda.time.DateTime;
 
 import com.acmetelecom.Call;
-import com.acmetelecom.iCallEnd;
-import com.acmetelecom.iCallStart;
+import com.acmetelecom.CallEndInterface;
+import com.acmetelecom.CallStartInterface;
 
 
 public class CallTest{
 	Mockery context = new Mockery();
-	iCallStart callStart;
-	iCallEnd callEnd;
+	CallStartInterface callStart;
+	CallEndInterface callEnd;
 	Call call;
 	BillingSystem billingSystem;
 
@@ -24,8 +24,8 @@ public class CallTest{
 	
 	@Before
 	public void setUp() throws Exception{
-		callStart = context.mock(iCallStart.class);
-		callEnd = context.mock(iCallEnd.class);
+		callStart = context.mock(CallStartInterface.class);
+		callEnd = context.mock(CallEndInterface.class);
 		call = new Call(callStart, callEnd);
 		billingSystem = new BillingSystem();
 		

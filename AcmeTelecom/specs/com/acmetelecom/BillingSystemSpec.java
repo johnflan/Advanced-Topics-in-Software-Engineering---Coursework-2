@@ -17,8 +17,8 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import com.acmetelecom.BillingSystem;
 import com.acmetelecom.BillGeneratorDummy;
-import com.acmetelecom.iBillGenerator;
-import com.acmetelecom.iCall;
+import com.acmetelecom.BillGeneratorInterface;
+import com.acmetelecom.CallInterface;
 import com.acmetelecom.customer.Customer;
 import com.acmetelecom.customer.CustomerDatabase;
 import com.acmetelecom.customer.Tariff;
@@ -36,7 +36,7 @@ public class BillingSystemSpec extends ConcordionTestCase {
 	Mockery context;
 	CustomerDatabase customerDatabase;
 	TariffLibrary tariffLibrary;
-	iBillGenerator billGenerator;
+	BillGeneratorInterface billGenerator;
 
 	
 	public BillingSystemSpec() {

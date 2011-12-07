@@ -1,7 +1,6 @@
 package com.acmetelecom;
 
-
-public interface iCallEnd {
+public interface CallEndInterface {
     
     public String getCaller();
 

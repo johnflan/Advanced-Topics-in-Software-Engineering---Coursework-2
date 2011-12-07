@@ -3,10 +3,11 @@ package com.acmetelecom;
 class HtmlPrinter implements Printer {
 
     private static Printer instance = new HtmlPrinter();
-
-    private HtmlPrinter() {
+    
+    private HtmlPrinter(){
+    	
     }
-
+    
     public static Printer getInstance() {
         return instance;
     }

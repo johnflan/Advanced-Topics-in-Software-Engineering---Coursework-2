@@ -7,12 +7,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.acmetelecom.customer.TariffLibrary;
+import com.acmetelecom.logcall.CallLogInterface;
 
 public class LogCallTest {
 	Mockery context;
 	CallLogInterface callLogger;
-	StartCall startCall;
-	EndCall endCall;
+	LogCallStart startCall;
+	LogCallEnd endCall;
 	final String caller = "12345";
 	final String callee = "98765";
 	final long timeStamp = 1212122323;
@@ -34,7 +35,7 @@ public class LogCallTest {
 		}});
 		
 
-		startCall = new StartCall(callLogger);
+		startCall = new LogCallStart(callLogger);
 		startCall.from(caller).to(callee);
 		
         context.assertIsSatisfied();
@@ -47,7 +48,7 @@ public class LogCallTest {
 			oneOf (callLogger).callInitiated(caller, callee, timeStamp);
 		}});
 		
-		startCall = new StartCall(callLogger);
+		startCall = new LogCallStart(callLogger);
 		startCall.atTime(timeStamp).from(caller).to(callee);
 		
 		context.assertIsSatisfied();
@@ -60,7 +61,7 @@ public class LogCallTest {
 			oneOf (callLogger).callCompleted(caller, callee);
 		}});
 		
-		endCall = new EndCall(callLogger);
+		endCall = new LogCallEnd(callLogger);
 		endCall.from(caller).to(callee);
 		
 		context.assertIsSatisfied();
@@ -73,7 +74,7 @@ public class LogCallTest {
 			oneOf (callLogger).callCompleted(caller, callee, timeStamp);
 		}});
 		
-		endCall = new EndCall(callLogger);
+		endCall = new LogCallEnd(callLogger);
 		endCall.atTime(timeStamp).from(caller).to(callee);
 		
 		context.assertIsSatisfied();

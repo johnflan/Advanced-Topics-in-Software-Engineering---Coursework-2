@@ -1,6 +1,6 @@
 package com.acmetelecom;
 
-public interface iCallStart {
+public interface CallStartInterface {
 	
     public String getCaller();
 

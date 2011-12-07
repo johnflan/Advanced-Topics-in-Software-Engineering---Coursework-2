@@ -2,7 +2,7 @@ package com.acmetelecom;
 
 import org.joda.time.DateTime;
 
-public interface iCall {
+public interface CallInterface {
 
     public String callee();
 

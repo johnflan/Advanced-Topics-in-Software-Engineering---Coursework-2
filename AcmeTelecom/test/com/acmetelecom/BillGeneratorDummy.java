@@ -7,7 +7,7 @@ import java.util.Map;
 import com.acmetelecom.LineItem;
 import com.acmetelecom.customer.Customer;
 
-public class BillGeneratorDummy implements iBillGenerator {
+public class BillGeneratorDummy implements BillGeneratorInterface {
 	
 	private Map<Customer, String> totalForCustomer;
 

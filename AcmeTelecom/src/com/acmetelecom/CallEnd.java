@@ -1,6 +1,6 @@
 package com.acmetelecom;
 
-public class CallEnd extends CallEvent implements iCallEnd {
+public class CallEnd extends CallEvent implements CallEndInterface {
     public CallEnd(String caller, String callee) {
         super(caller, callee, System.currentTimeMillis());
     }

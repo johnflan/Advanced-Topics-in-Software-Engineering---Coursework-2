@@ -1,10 +1,11 @@
 package com.acmetelecom;
 
+import com.acmetelecom.logcall.CallLogInterface;
 import com.acmetelecom.logcall.LogCall;
 
-public class EndCall extends LogCall {
+public class LogCallEnd extends LogCall {
 
-	public EndCall(CallLogInterface billingSystem) {
+	public LogCallEnd(CallLogInterface billingSystem) {
 		super(billingSystem);
 	}
 	@SuppressWarnings("deprecation")

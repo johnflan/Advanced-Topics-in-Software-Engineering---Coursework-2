@@ -7,6 +7,7 @@ import com.acmetelecom.customer.CustomerDatabase;
 import com.acmetelecom.customer.Tariff;
 import com.acmetelecom.customer.TariffLibrary;
 import com.acmetelecom.logcall.CallFrom;
+import com.acmetelecom.logcall.CallLogInterface;
 
 
 import java.io.FileInputStream;
@@ -19,7 +20,7 @@ public class BillingSystem implements CallLogInterface{
     private List<CallEvent> callLog = new ArrayList<CallEvent>();
     private final CustomerDatabase centralCustomerDatabase;
     private final TariffLibrary centralTariffDatabase;
-    private final iBillGenerator billGenerator;
+    private final BillGeneratorInterface billGenerator;
     
     static final String PEAK_RATE_START_TIME = "peak_rate_start";
 	static final String OFF_PEAK_RATE_START_TIME = "off-peak_rate_start";
@@ -31,7 +32,7 @@ public class BillingSystem implements CallLogInterface{
     	loadConfigurationProperties();
     }
     
-	public BillingSystem(CustomerDatabase customerDB, TariffLibrary tariffDB, iBillGenerator billGen){
+	public BillingSystem(CustomerDatabase customerDB, TariffLibrary tariffDB, BillGeneratorInterface billGen){
     	this.centralCustomerDatabase = customerDB;
     	this.centralTariffDatabase = tariffDB;
     	this.billGenerator = billGen;
@@ -73,11 +74,11 @@ public class BillingSystem implements CallLogInterface{
     
     //DSL Start call methods
     public CallFrom startCall(){
-    	return new StartCall(this);
+    	return new LogCallStart(this);
     }
     
     public CallFrom endCall(){
-    	return new EndCall(this);
+    	return new LogCallEnd(this);
     }
     
     @Deprecated
@@ -132,11 +133,11 @@ public class BillingSystem implements CallLogInterface{
 
         CallEvent start = null;
         for (CallEvent event : customerEvents) {
-            if (event instanceof iCallStart) {
+            if (event instanceof CallStartInterface) {
                 start = event;
             }
-            if (event instanceof iCallEnd && start != null) {
-                calls.add(new Call((iCallStart) start,(iCallEnd) event));
+            if (event instanceof CallEndInterface && start != null) {
+                calls.add(new Call((CallStartInterface) start,(CallEndInterface) event));
                 start = null;
             }
         }

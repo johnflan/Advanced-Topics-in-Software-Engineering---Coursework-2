@@ -94,12 +94,12 @@ public class BillGeneratorTest {
 	}
 	
 	//Classes needed to add fake calls in the log
-	private class FakeCallStart extends CallEvent implements iCallStart{
+	private class FakeCallStart extends CallEvent implements CallStartInterface{
 		public FakeCallStart(String caller, String callee, long fakeMillis) {
 			super(caller, callee, fakeMillis);
 		}
 	}
-	private class FakeCallEnd extends CallEvent implements iCallEnd{
+	private class FakeCallEnd extends CallEvent implements CallEndInterface{
 		public FakeCallEnd(String caller, String callee, long fakeMillis) {
 			super(caller, callee, fakeMillis);
 		}
