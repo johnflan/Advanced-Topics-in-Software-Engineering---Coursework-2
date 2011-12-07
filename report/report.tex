@@ -133,7 +133,22 @@ During the initial unit testing we found several problems with the program’s l
 
 Using the EclEmma code coverage too for Eclipse we were able to visualise the coverage of our unit tests (screenshot attached in appendix). While code coverage is not a good measure of test comprehensiveness, it was useful for finding paths we had missed. The class we were least able to test was the Printer implementation HtmlPrinter, which outputted text to the screen using System.out.println(). We could have spend time redirecting the default system output or refactoring the class to inject an output device. We decided other areas of the system had greater priority for our efforts.
 
-Once the team was happy with the coverage of the test for the unmodified code, the unit tests were expanded to include the new cases that would occur because of the new feature. 
+Once the team was happy with the coverage of the test for the unmodified code, the unit tests were expanded to include the new cases that would occur because of the new feature.
+
+\subsubsection{Unit test readability}
+As we were provided with a code base with poor documentation, we decided to write the tests to help the future reader understand the system. By using embedded DSL techniques we created a domain-specific language to write tests using the domain language. That task was achieved by creating a new package called com.acmetelecom.helpers with the necessary interfaces for the IDE to prompt the user for the next step.
+
+For the interface, we defined the customers that we needed, then the calls that were made and finally the results that we were expecting. An example of a test is shown below: 
+
+\begin{lstlisting}
+newTest = new BillingSystemContext();
+newTest
+	.withACustomerNamed(CARLY_SIMON).withPhoneNumber(CARLY_SIMON_PHONE_NUM).andPricePlan(STANDARD_TARIFF)
+	.withACustomerNamed(TONI_BRAXTON).withPhoneNumber(TONI_BRAXTON_PHONE_NUM).andPricePlan(BUSINESS_TARIFF)
+	.withACallAt("01/01/11 10:00:00").fromCaller(CARLY_SIMON_PHONE_NUM).toCallee(TONI_BRAXTON_PHONE_NUM).thatLastsForSecond(60)
+	.testBillsOfCustomer(CARLY_SIMON+"/"+CARLY_SIMON_PHONE_NUM).chargedWithPricePlan(STANDARD_TARIFF).forPeakSeconds(60).andOffPeakSeconds(0)
+	.createBills();
+\end{lstlisting}
 
 \section{Feature implementation}
 Given the start and end time of a call we must compute the cost depending on how many seconds are overlapping the peak period and on how many seconds are overlapping the off-peak period. To apply this change, we initially created two methods in the Call class that calculate and return the peak seconds and the off-peak seconds of the specific call. These methods are called in the BillingSystem class where we get the final cost of the call by multiplying the peak seconds returned with the specific tariff peak rate and the peak seconds with the off-peak seconds.
