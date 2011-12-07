@@ -290,7 +290,6 @@ public class BillingSystemTest {
 		customerList.add(customer1);
 		customerList.add(customer2);
 		customerList.add(customer3);
-		//initializeAllCallsForPeakToOffPeak();
 		
 		//First Call
 		billingSystem.startCall().atTime(peakDateTime2.getMillis()).from(c1).to(c2);
@@ -329,7 +328,6 @@ public class BillingSystemTest {
 		customerList.add(customer1);
 		customerList.add(customer2);
 		customerList.add(customer3);
-		//initializeAllCallsForOffPeakToOffPeak();
 		
 		//First Call
 		billingSystem.startCall().atTime(offPeakDateTime1.getMillis()).from(c1).to(c2);
@@ -367,17 +365,9 @@ public class BillingSystemTest {
 		DateTime dateBefore = new DateTime(2011,12,31,6,0,0);
 		DateTime dateAfter = new DateTime(2012,1,1,14,0,0);
 		
-/*		List<CallEvent> callLog = new ArrayList<CallEvent>();
-		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",dateBefore.getMillis());
-		callLog.add(callStart);
-		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",dateAfter.getMillis());
-		callLog.add(callEnd);
-		billingSystem.setCallLog(callLog);*/
-		
 		billingSystem.startCall().atTime(dateBefore.getMillis()).from(c1).to(c2);
 		billingSystem.endCall().atTime(dateAfter.getMillis()).from(c1).to(c2);
 		
-		//Calls last for one day and 23 hours
 		//peakSeconds=19hours, offPeakSeconds=12hours+11hours
 		long peakSeconds=19*60*60;
 		long offPeakSeconds=13*60*60;
@@ -395,13 +385,6 @@ public class BillingSystemTest {
 	@Test
 	public void checkCallEndBeforeCallStart(){
 		customerList.add(customer1);
-		
-/*		List<CallEvent> callLog = new ArrayList<CallEvent>();
-		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",peakDateTime1.getMillis());
-		callLog.add(callStart);
-		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",peakDateTime1.minusMinutes(2).getMillis());
-		callLog.add(callEnd);
-		billingSystem.setCallLog(callLog);*/
 		
 		billingSystem.startCall().atTime(peakDateTime1.getMillis()).from(c1).to(c2);
 		billingSystem.endCall().atTime(peakDateTime1.minusMinutes(2).getMillis()).from(c1).to(c2);
@@ -421,17 +404,9 @@ public class BillingSystemTest {
 	
 	//Tests what happens if a CallStart event and the next CallEnd event have different Callee numbers
 	//The result is that the cost is calculated which is wrong
-	//TODO
 	@Test
 	public void checkCallStartWithCallEndToAnotherNumber(){
 		customerList.add(customer1);
-		
-/*		List<CallEvent> callLog = new ArrayList<CallEvent>();
-		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",peakDateTime1.getMillis());
-		callLog.add(callStart);
-		FakeCallEnd callEnd = new FakeCallEnd("111111111111","333333333333",peakDateTime1.plusHours(1).getMillis());
-		callLog.add(callEnd);
-		billingSystem.setCallLog(callLog);*/
 		
 		billingSystem.startCall().atTime(peakDateTime1.getMillis()).from(c1).to(c2);
 		billingSystem.endCall().atTime(peakDateTime1.plusHours(1).getMillis()).from(c1).to(c3);
@@ -451,17 +426,9 @@ public class BillingSystemTest {
 	
 	//Tests what happens if the Tariff of a customer changes after he has made a call
 	//The cost of all previous calls is calculated with the new Tariff which is wrong
-	//TODO
 	@Test
 	public void checkWhatHappensIfTariffChanges(){
 		customerList.add(customer1);
-
-/*		List<CallEvent> callLog = new ArrayList<CallEvent>();
-		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",peakDateTime1.getMillis());
-		callLog.add(callStart);
-		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",peakDateTime1.plusHours(1).getMillis());
-		callLog.add(callEnd);
-		billingSystem.setCallLog(callLog);*/
 		
 		billingSystem.startCall().atTime(peakDateTime1.getMillis()).from(c1).to(c2);
 		billingSystem.endCall().atTime(peakDateTime1.plusHours(1).getMillis()).from(c1).to(c2);
@@ -485,18 +452,10 @@ public class BillingSystemTest {
 	
 	//Tests what happens if the Tariff of a customer changes after he has made a call
 	//The cost of all previous calls is calculated with the new peak times which is wrong
-	//TODO
 	@Test
 	public void checkWhatHappensIfPeakTimesChanges(){
 		customerList.add(customer1);
 
-		
-/*		List<CallEvent> callLog = new ArrayList<CallEvent>();
-		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",offPeakDateTime2.getMillis());
-		callLog.add(callStart);
-		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",offPeakDateTime2.plusHours(1).getMillis());
-		callLog.add(callEnd);
-		billingSystem.setCallLog(callLog);*/
 		//The call starts at 6am and ends at 7am
 		billingSystem.startCall().atTime(offPeakDateTime2.getMillis()).from(c1).to(c2);
 		billingSystem.endCall().atTime(offPeakDateTime2.plusHours(1).getMillis()).from(c1).to(c2);
@@ -524,13 +483,6 @@ public class BillingSystemTest {
 		customerList.add(customer1);
 		customerList.add(customer2);
 		
-/*		List<CallEvent> callLog = new ArrayList<CallEvent>();
-		FakeCallStart callStart = new FakeCallStart("111111111111","333333333333",peakDateTime1.getMillis());
-		callLog.add(callStart);
-		FakeCallEnd callEnd = new FakeCallEnd("222222222222","333333333333",peakDateTime1.plusHours(1).getMillis());
-		callLog.add(callEnd);
-		billingSystem.setCallLog(callLog);*/
-		
 		billingSystem.startCall().atTime(peakDateTime1.getMillis()).from(c1).to(c3);
 		billingSystem.endCall().atTime(peakDateTime1.plusHours(1).getMillis()).from(c2).to(c3);
 		
@@ -555,12 +507,6 @@ public class BillingSystemTest {
 	public void checkCostOfOffPeakCallThatLastsOneSecond(){
 		customerList.add(customer1);
 		
-/*		List<CallEvent> callLog = new ArrayList<CallEvent>();
-		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",offPeakDateTime1.getMillis());
-		callLog.add(callStart);
-		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",offPeakDateTime1.plusSeconds(1).getMillis());
-		callLog.add(callEnd);
-		billingSystem.setCallLog(callLog);*/
 		billingSystem.startCall().atTime(offPeakDateTime1.getMillis()).from("111111111111").to("222222222222");
 		billingSystem.endCall().atTime(offPeakDateTime1.plusSeconds(1).getMillis()).from("111111111111").to("222222222222");		
 		//peakSeconds=0, offPeakSeconds=1
@@ -582,124 +528,4 @@ public class BillingSystemTest {
 		return String.format("%.2f", peakCost.add(offPeakCost).setScale(0, RoundingMode.HALF_UP).divide(new BigDecimal(100)).doubleValue());
 	}
 	
-	/////////////////////////////////////////////////////////////////////////////////////////////////
-	///////////////////// Initializing Calls ////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////////////////////////////////////////////
-	/*private void initializeAllCallsForPeak() {
-		List<CallEvent> callLog = new ArrayList<CallEvent>();
-		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",peakDateTime1.getMillis());
-		callLog.add(callStart);
-		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",peakDateTime1.plusMinutes(1).getMillis());
-		callLog.add(callEnd);
-		
-		callStart = new FakeCallStart("222222222222","333333333333",peakDateTime2.getMillis());
-		callLog.add(callStart);
-		callEnd = new FakeCallEnd("222222222222","333333333333",peakDateTime2.plusMinutes(1).getMillis());
-		callLog.add(callEnd);
-		
-		callStart = new FakeCallStart("333333333333","222222222222",peakDateTime1.getMillis());
-		callLog.add(callStart);
-		callEnd = new FakeCallEnd("333333333333","222222222222",peakDateTime1.plusMinutes(1).getMillis());
-		callLog.add(callEnd);
-		billingSystem.setCallLog(callLog);
-		
-
-		
-	}
-	
-	private void initializeAllCallsForOffPeak() {
-		List<CallEvent> callLog = new ArrayList<CallEvent>();
-		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",offPeakDateTime1.getMillis());
-		callLog.add(callStart);
-		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",offPeakDateTime1.plusHours(1).getMillis());
-		callLog.add(callEnd);
-		
-		callStart = new FakeCallStart("222222222222","333333333333",offPeakDateTime1.getMillis());
-		callLog.add(callStart);
-		callEnd = new FakeCallEnd("222222222222","333333333333",offPeakDateTime1.plusHours(1).getMillis());
-		callLog.add(callEnd);
-		
-		callStart = new FakeCallStart("333333333333","222222222222",offPeakDateTime1.getMillis());
-		callLog.add(callStart);
-		callEnd = new FakeCallEnd("333333333333","222222222222",offPeakDateTime1.plusHours(1).getMillis());
-		callLog.add(callEnd);
-		billingSystem.setCallLog(callLog);
-
-	}
-	
-	private void initializeAllCallsForPeakToOffPeak() {
-		List<CallEvent> callLog = new ArrayList<CallEvent>();
-		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",peakDateTime2.getMillis());
-		callLog.add(callStart);
-		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",offPeakDateTime3.getMillis());
-		callLog.add(callEnd);
-		
-		callStart = new FakeCallStart("222222222222","333333333333",peakDateTime2.getMillis());
-		callLog.add(callStart);
-		callEnd = new FakeCallEnd("222222222222","333333333333",offPeakDateTime3.getMillis());
-		callLog.add(callEnd);
-		
-		callStart = new FakeCallStart("333333333333","222222222222",peakDateTime2.getMillis());
-		callLog.add(callStart);
-		callEnd = new FakeCallEnd("333333333333","222222222222",offPeakDateTime3.getMillis());
-		callLog.add(callEnd);
-		billingSystem.setCallLog(callLog);
-		
-
-	}
-	
-	private void initializeAllCallsForOffPeakToPeak() {
-		List<CallEvent> callLog = new ArrayList<CallEvent>();
-		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",offPeakDateTime1.getMillis());
-		callLog.add(callStart);
-		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",peakDateTime1.getMillis());
-		callLog.add(callEnd);
-		
-		callStart = new FakeCallStart("222222222222","333333333333",offPeakDateTime1.getMillis());
-		callLog.add(callStart);
-		callEnd = new FakeCallEnd("222222222222","333333333333",peakDateTime1.getMillis());
-		callLog.add(callEnd);
-		
-		callStart = new FakeCallStart("333333333333","222222222222",offPeakDateTime1.getMillis());
-		callLog.add(callStart);
-		callEnd = new FakeCallEnd("333333333333","222222222222",peakDateTime1.getMillis());
-		callLog.add(callEnd);
-		billingSystem.setCallLog(callLog);
-		
-
-		
-	}
-	
-	private void initializeAllCallsForOffPeakToOffPeak() {
-		List<CallEvent> callLog = new ArrayList<CallEvent>();
-		FakeCallStart callStart = new FakeCallStart("111111111111","222222222222",offPeakDateTime1.getMillis());
-		callLog.add(callStart);
-		FakeCallEnd callEnd = new FakeCallEnd("111111111111","222222222222",offPeakDateTime1.plusDays(1).plusHours(23).getMillis());
-		callLog.add(callEnd);
-		
-		callStart = new FakeCallStart("222222222222","333333333333",offPeakDateTime1.getMillis());
-		callLog.add(callStart);
-		callEnd = new FakeCallEnd("222222222222","333333333333",offPeakDateTime1.plusDays(1).plusHours(23).getMillis());
-		callLog.add(callEnd);
-		
-		callStart = new FakeCallStart("333333333333","222222222222",offPeakDateTime1.getMillis());
-		callLog.add(callStart);
-		callEnd = new FakeCallEnd("333333333333","222222222222",offPeakDateTime1.plusDays(1).plusHours(23).getMillis());
-		callLog.add(callEnd);
-		billingSystem.setCallLog(callLog);
-		
-
-	}*/
-	
-	//Classes needed to add fake calls in the log
-	private class FakeCallStart extends CallEvent implements iCallStart{
-		public FakeCallStart(String caller, String callee, long fakeMillis) {
-			super(caller, callee, fakeMillis);
-		}
-	}
-	private class FakeCallEnd extends CallEvent implements iCallEnd{
-		public FakeCallEnd(String caller, String callee, long fakeMillis) {
-			super(caller, callee, fakeMillis);
-		}
-	}
 }
