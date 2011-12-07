@@ -69,7 +69,7 @@ public class BillGeneratorTest {
 		
 		context.checking(new Expectations() {{
 			oneOf (printer).printHeading(customer.getFullName(), customer.getPhoneNumber(), customer.getPricePlan());
-			oneOf (printer).printItem("05/05/11 05:00", "222222222222", "60:00", expectedCost);
+			oneOf (printer).printItem("05/05/11 05:00:00", "222222222222", "60:00", expectedCost);
 			oneOf (printer).printTotal(expectedCost);
 		}});
 		
@@ -93,8 +93,8 @@ public class BillGeneratorTest {
 		
 		context.checking(new Expectations() {{
 			oneOf (printer).printHeading(customer.getFullName(), customer.getPhoneNumber(), customer.getPricePlan());
-			oneOf (printer).printItem("05/05/11 05:00", "222222222222", "60:00", expectedCost1);
-			oneOf (printer).printItem("06/06/11 05:00", "222222222222", "60:00", expectedCost2);
+			oneOf (printer).printItem("05/05/11 05:00:00", "222222222222", "60:00", expectedCost1);
+			oneOf (printer).printItem("06/06/11 05:00:00", "222222222222", "60:00", expectedCost2);
 			oneOf (printer).printTotal(expectedTotalCost);
 		}});
 		
