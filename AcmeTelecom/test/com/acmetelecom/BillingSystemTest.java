@@ -29,19 +29,6 @@ public class BillingSystemTest {
 	}
 	
 	@Test
-	public void checkExample(){
-		
-		newTest
-			.withACustomerNamed(CARLY_SIMON).withPhoneNumber(CARLY_SIMON_PHONE_NUM).andPricePlan(STANDARD_TARIFF)
-			.withACustomerNamed(TONI_BRAXTON).withPhoneNumber(TONI_BRAXTON_PHONE_NUM).andPricePlan(BUSINESS_TARIFF)
-			.withACallAt("01/01/11 10:00:00").fromCaller(CARLY_SIMON_PHONE_NUM).toCallee(TONI_BRAXTON_PHONE_NUM).thatLastsForSeconds(60)
-			.testBillsOfCustomer(CARLY_SIMON+"/"+CARLY_SIMON_PHONE_NUM).chargedWithPricePlan(STANDARD_TARIFF).forPeakSeconds(60).andOffPeakSeconds(0)
-			.testBillsOfCustomer(TONI_BRAXTON+"/"+TONI_BRAXTON_PHONE_NUM).chargedWithPricePlan(BUSINESS_TARIFF).forPeakSeconds(0).andOffPeakSeconds(0)
-			.createBills();
-		
-	}
-	
-	@Test
 	public void checkWhatHappensIfSomeoneCallsHimself(){
 		newTest
 			.withACustomerNamed(CARLY_SIMON).withPhoneNumber(CARLY_SIMON_PHONE_NUM).andPricePlan(STANDARD_TARIFF)
