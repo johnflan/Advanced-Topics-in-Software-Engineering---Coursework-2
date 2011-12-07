@@ -70,13 +70,6 @@ public class BillingSystem implements CallLogInterface{
 		DaytimePeakPeriod.PEAK_RATE_START_TIME = Integer.parseInt(peak_rate_start);
 	}
     
-    public List<CallEvent> getCallLog(){
-    	return callLog;
-    }
-    
-    public void setCallLog(List<CallEvent> callLog){
-    	this.callLog = callLog;
-    }
     
     //DSL Start call methods
     public CallFrom startCall(){

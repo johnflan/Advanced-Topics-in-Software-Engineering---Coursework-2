@@ -4,41 +4,26 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
-
 import com.acmetelecom.LineItem;
 import com.acmetelecom.customer.Customer;
 import com.acmetelecom.customer.Tariff;
 
 public class BillGeneratorTest {
-	//Classes needed to add fake calls in the log
-	private class FakeCallStart extends CallEvent implements iCallStart{
-		public FakeCallStart(String caller, String callee, long fakeMillis) {
-			super(caller, callee, fakeMillis);
-		}
-	}
-	private class FakeCallEnd extends CallEvent implements iCallEnd{
-		public FakeCallEnd(String caller, String callee, long fakeMillis) {
-			super(caller, callee, fakeMillis);
-		}
-	}
 	
 	Mockery context = new Mockery();
 	Printer printer;
-	
 	BillGenerator billGenerator;
-	
 	Customer customer = new Customer("Cname", "111111111111", "Standard");
 	Tariff tariff = Tariff.Standard;
-	
 	List<LineItem> calls;
 	String totalBill;
 	String custNo;
+		
 	@Before
 	public void setUp(){
 		printer = context.mock(Printer.class);
@@ -106,5 +91,17 @@ public class BillGeneratorTest {
 		BigDecimal offPeakCost = tariff.offPeakRate().multiply(new BigDecimal(offPeakSeconds));
 		
 		return String.format("%.2f", peakCost.add(offPeakCost).setScale(0, RoundingMode.HALF_UP).divide(new BigDecimal(100)).doubleValue());
+	}
+	
+	//Classes needed to add fake calls in the log
+	private class FakeCallStart extends CallEvent implements iCallStart{
+		public FakeCallStart(String caller, String callee, long fakeMillis) {
+			super(caller, callee, fakeMillis);
+		}
+	}
+	private class FakeCallEnd extends CallEvent implements iCallEnd{
+		public FakeCallEnd(String caller, String callee, long fakeMillis) {
+			super(caller, callee, fakeMillis);
+		}
 	}
 }
