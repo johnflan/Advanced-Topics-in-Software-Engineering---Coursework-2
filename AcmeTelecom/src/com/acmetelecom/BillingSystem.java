@@ -1,19 +1,18 @@
 package com.acmetelecom;
 
-import com.acmetelecom.customer.CentralCustomerDatabase;
-import com.acmetelecom.customer.CentralTariffDatabase;
+import java.io.FileInputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
 import com.acmetelecom.customer.Customer;
 import com.acmetelecom.customer.CustomerDatabase;
 import com.acmetelecom.customer.Tariff;
 import com.acmetelecom.customer.TariffLibrary;
 import com.acmetelecom.logcall.CallFrom;
 import com.acmetelecom.logcall.CallLogInterface;
-
-
-import java.io.FileInputStream;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.*;
 
 public class BillingSystem implements CallLogInterface{
 
@@ -24,13 +23,6 @@ public class BillingSystem implements CallLogInterface{
     
     static final String PEAK_RATE_START_TIME = "peak_rate_start";
 	static final String OFF_PEAK_RATE_START_TIME = "off-peak_rate_start";
-    
-    public BillingSystem(){
-    	this.centralCustomerDatabase = CentralCustomerDatabase.getInstance();
-    	this.centralTariffDatabase = CentralTariffDatabase.getInstance();
-    	this.billGenerator = new BillGenerator();
-    	loadConfigurationProperties();
-    }
     
 	public BillingSystem(CustomerDatabase customerDB, TariffLibrary tariffDB, BillGeneratorInterface billGen){
     	this.centralCustomerDatabase = customerDB;
