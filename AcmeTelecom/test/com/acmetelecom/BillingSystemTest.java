@@ -25,25 +25,12 @@ import com.acmetelecom.customer.TariffLibrary;
 
 @SuppressWarnings("all")
 public class BillingSystemTest {
-	//Classes needed to add fake calls in the log
-	private class FakeCallStart extends CallEvent implements iCallStart{
-		public FakeCallStart(String caller, String callee, long fakeMillis) {
-			super(caller, callee, fakeMillis);
-		}
-	}
-	private class FakeCallEnd extends CallEvent implements iCallEnd{
-		public FakeCallEnd(String caller, String callee, long fakeMillis) {
-			super(caller, callee, fakeMillis);
-		}
-	}
 	
 	Mockery context = new Mockery();
-	
 	CustomerDatabase customerDatabase;
 	TariffLibrary tariffLibrary;
 	iBillGenerator billGenerator;
 	iCall calls;
-	
 	BillingSystem billingSystem;
 	
 	//Customers to be added in the fake database
@@ -96,27 +83,7 @@ public class BillingSystemTest {
 		c2=customer2.getPhoneNumber();
 		c3=customer3.getPhoneNumber();
 	}
-	
-	//Checks that call events can be added in the log
-	@Test
-	public void checkCallLogSize() {
-		final BillingSystem billingSystem = new BillingSystem();
 		
-		assertEquals(0,billingSystem.getCallLog().size());
-		
-		billingSystem.callInitiated("caller", "callee");
-		
-		assertEquals(1,billingSystem.getCallLog().size());
-		
-		billingSystem.callCompleted("caller", "callee");
-		
-		assertEquals(2,billingSystem.getCallLog().size());
-		
-		billingSystem.createCustomerBills();
-		
-		assertEquals(0,billingSystem.getCallLog().size());
-	}
-	
 	//This test is wrong because the cost should have been 0.00
 	//TODO
 	@Test
@@ -752,4 +719,16 @@ public class BillingSystemTest {
 		
 
 	}*/
+	
+	//Classes needed to add fake calls in the log
+	private class FakeCallStart extends CallEvent implements iCallStart{
+		public FakeCallStart(String caller, String callee, long fakeMillis) {
+			super(caller, callee, fakeMillis);
+		}
+	}
+	private class FakeCallEnd extends CallEvent implements iCallEnd{
+		public FakeCallEnd(String caller, String callee, long fakeMillis) {
+			super(caller, callee, fakeMillis);
+		}
+	}
 }
