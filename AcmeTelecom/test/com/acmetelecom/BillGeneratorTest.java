@@ -38,12 +38,13 @@ public class BillGeneratorTest {
 	
 	List<LineItem> calls;
 	String totalBill;
-	
+	String custNo;
 	@Before
 	public void setUp(){
 		printer = context.mock(Printer.class);
 		calls = new ArrayList<LineItem>();
 		billGenerator = new BillGenerator();
+		custNo=customer.getPhoneNumber();
 	}
 	
 	//Tests if the total cost remains zero and no lines are printed
@@ -62,6 +63,7 @@ public class BillGeneratorTest {
 	public void checkWhenACallWasMade(){
 		DateTime startDate = new DateTime(2011,5,5,5,0,0);
 		final Call call = new Call(new FakeCallStart("111111111111","222222222222",startDate.getMillis()),new FakeCallEnd("111111111111","222222222222",startDate.plusHours(1).getMillis()));
+		
 		final String expectedCost = calculateExpectedCost(tariff,0,60);
 		calls.add(new LineItem(call, (new BigDecimal(expectedCost)).multiply(new BigDecimal(100))));
 		
