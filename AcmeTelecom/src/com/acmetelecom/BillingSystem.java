@@ -43,17 +43,16 @@ public class BillingSystem implements CallLogInterface{
     	this.centralTariffDatabase = tariffDB;
     	this.billGenerator = billGen;
     	loadConfigurationProperties();
-    }
+  }
     
-    private void loadConfigurationProperties() {
+  private void loadConfigurationProperties() {
     	Properties props = new Properties();
     	String peak_rate_start = "";
     	String off_peak_rate_start = "";
-        //Initialise the system parameters
+        //Initialize the system parameters
       	try {
   				props.load(new FileInputStream("billing_system.properties"));
   			} catch (Exception e) {
-  				// TODO Auto-generated catch block
   				System.out.println("Unable to load configuration file \"billing_system.properties\"");
   			} 
      		

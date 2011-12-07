@@ -12,6 +12,10 @@ import java.util.Set;
 import org.concordion.integration.junit3.ConcordionTestCase;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
+import org.joda.time.Interval;
+
 import com.acmetelecom.BillingSystem;
 import com.acmetelecom.BillGeneratorDummy;
 import com.acmetelecom.BillGeneratorInterface;
@@ -68,16 +72,18 @@ public class BillingSystemSpec extends ConcordionTestCase {
 
 		customerList.add(new Customer(name, number, plan));
 	}
-	
+
 	public void createCallEntry(String caller, String callee, String startTime, String duration){
 		//calculate timestamp
 		int hour = Integer.parseInt(startTime.substring(0, 2));
 		int minute = Integer.parseInt(startTime.substring(3, 5));
 		int durationMinutes = Integer.parseInt(duration);
-		long callStartTime = (hour * 60 * 60 * 1000) + (minute * 60 * 1000);
-		long callEndTime = callStartTime + (durationMinutes * 60 * 1000);
+	  DateTime startTime1=new DateTime(2011,1,1,hour,minute,0);
+	  
+		long callStartTime = startTime1.getMillis();
+		long callEndTime = startTime1.plusMinutes(durationMinutes).getMillis();
 
-		billingSystem.startCall().atTime(callStartTime).from(caller).to(callee);
+	  billingSystem.startCall().atTime(callStartTime).from(caller).to(callee);
 		billingSystem.endCall().atTime(callEndTime).from(caller).to(callee);
 	}
 	
