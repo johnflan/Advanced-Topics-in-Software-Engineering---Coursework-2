@@ -34,7 +34,7 @@ public class BillGeneratorTest {
 	
 	//Tests if the total cost remains zero and no lines are printed
 	@Test
-	public void checkWhenNoCallWasMade(){
+	public void noCallWasMade(){
 		context.checking(new Expectations() {{
 			oneOf (printer).printHeading(customer.getFullName(), customer.getPhoneNumber(), customer.getPricePlan());
 			oneOf (printer).printTotal("0.00");
@@ -45,7 +45,7 @@ public class BillGeneratorTest {
 	
 	//Tests one call to see if the total cost can change
 	@Test
-	public void checkWhenACallWasMade(){
+	public void aCallWasMade(){
 		DateTime startDate = new DateTime(2011,5,5,5,0,0);
 		final Call call = new Call(new FakeCallStart("111111111111","222222222222",startDate.getMillis()),new FakeCallEnd("111111111111","222222222222",startDate.plusHours(1).getMillis()));
 		
@@ -63,7 +63,7 @@ public class BillGeneratorTest {
 	
 	//Tests more than 1 call to see if they are printed
 	@Test
-	public void checkWhenTwoCallsWereMade(){
+	public void twoCallsWereMade(){
 		DateTime startDate = new DateTime(2011,5,5,5,0,0);
 		Call call = new Call(new FakeCallStart("111111111111","222222222222",startDate.getMillis()),new FakeCallEnd("111111111111","222222222222",startDate.plusHours(1).getMillis()));
 		final String expectedCost1 = calculateExpectedCost(tariff,0,60);

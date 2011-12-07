@@ -29,7 +29,7 @@ public class BillingSystemTest {
 	}
 	
 	@Test
-	public void checkWhatHappensIfSomeoneCallsHimself(){
+	public void customerCallsHimself(){
 		newTest
 			.withACustomerNamed(CARLY_SIMON).withPhoneNumber(CARLY_SIMON_PHONE_NUM).andPricePlan(STANDARD_TARIFF)
 			.withACallAt("01/01/11 10:00:00").fromCaller(CARLY_SIMON_PHONE_NUM).toCallee(CARLY_SIMON_PHONE_NUM).thatLastsForSeconds(60)
@@ -39,7 +39,7 @@ public class BillingSystemTest {
 	
 	//The result should be the cost from startDate2 until endDate2 (60 seconds)
 	@Test
-	public void checkWhatHappensIfWeHaveTwoCallStartsAndOneCallEnd(){
+	public void twoCallStartsAndOneCallEnd(){
 		newTest
 			.withACustomerNamed(CARLY_SIMON).withPhoneNumber(CARLY_SIMON_PHONE_NUM).andPricePlan(STANDARD_TARIFF)
 			.withACallAt("01/01/11 10:00:00").fromCaller(CARLY_SIMON_PHONE_NUM).toCallee(TONI_BRAXTON_PHONE_NUM).withoutEnd()
@@ -50,7 +50,7 @@ public class BillingSystemTest {
 	
 	//The result should be the cost from startDate1 until endDate1 (60 seconds)
 	@Test
-	public void checkWhatHappensIfWeHaveOneCallStartAndTwoCallEnds(){
+	public void oneCallStartAndTwoCallEnds(){
 
 		newTest
 			.withACustomerNamed(CARLY_SIMON).withPhoneNumber(CARLY_SIMON_PHONE_NUM).andPricePlan(STANDARD_TARIFF)
@@ -64,7 +64,7 @@ public class BillingSystemTest {
 	//This is wrong because both costumers are charged for the call
 	//Both customers are charged according to their own price plan
 	@Test
-	public void checkWhatHappensIfTwoCustomersHaveTheSamePhoneNumber(){
+	public void twoCustomersHaveTheSamePhoneNumber(){
 
 		newTest
 			.withACustomerNamed(CARLY_SIMON).withPhoneNumber(CARLY_SIMON_PHONE_NUM).andPricePlan(STANDARD_TARIFF)
@@ -78,7 +78,7 @@ public class BillingSystemTest {
 	
 	//Tests that costs can be calculated for different price plans in the peak time period
 	@Test
-	public void checkCallCostWhenCallIsInPeakTime(){
+	public void callCostWhenCallIsInPeakTime(){
 
 		newTest
 			.withACustomerNamed(CARLY_SIMON).withPhoneNumber(CARLY_SIMON_PHONE_NUM).andPricePlan(STANDARD_TARIFF)
@@ -96,7 +96,7 @@ public class BillingSystemTest {
 	
 	//Tests that costs can be calculated for different price plans in the off peak time period
 	@Test
-	public void checkCallCostWhenCallIsInOffPeakTime(){
+	public void callCostWhenCallIsInOffPeakTime(){
 
 		newTest
 			.withACustomerNamed(CARLY_SIMON).withPhoneNumber(CARLY_SIMON_PHONE_NUM).andPricePlan(STANDARD_TARIFF)
@@ -115,7 +115,7 @@ public class BillingSystemTest {
 	//Tests that costs can be calculated for different price plans
 	//when the call is in the peak and off peak time periods
 	@Test
-	public void checkCallCostWhenCallStartsInOffPeakTimeAndEndsInPeakTime(){
+	public void callCostWhenCallStartsInOffPeakTimeAndEndsInPeakTime(){
 
 		newTest
 			.withACustomerNamed(CARLY_SIMON).withPhoneNumber(CARLY_SIMON_PHONE_NUM).andPricePlan(STANDARD_TARIFF)
@@ -134,7 +134,7 @@ public class BillingSystemTest {
 	//Tests that costs can be calculated for different price plans
 	//when the call is in the peak and off peak time periods
 	@Test
-	public void checkCallCostWhenCallStartsInPeakTimeAndEndsInOffPeakTime(){
+	public void callCostWhenCallStartsInPeakTimeAndEndsInOffPeakTime(){
 
 		newTest
 			.withACustomerNamed(CARLY_SIMON).withPhoneNumber(CARLY_SIMON_PHONE_NUM).andPricePlan(STANDARD_TARIFF)
@@ -153,7 +153,7 @@ public class BillingSystemTest {
 	//Tests that costs can be calculated for different price plans
 	//when the call is in the peak and off peak time periods and lasts more than a day
 	@Test
-	public void checkCallCostWhenCallStartsInOffPeakTimeAndEndsInOffPeakTimeButLastsMoreThanADay(){
+	public void callCostWhenCallStartsInOffPeakTimeAndEndsInOffPeakTimeButLastsMoreThanADay(){
 
 		newTest
 			.withACustomerNamed(CARLY_SIMON).withPhoneNumber(CARLY_SIMON_PHONE_NUM).andPricePlan(STANDARD_TARIFF)
@@ -171,7 +171,7 @@ public class BillingSystemTest {
 	
 	//Tests the cost of a call when the year changes
 	@Test
-	public void checkCallCostOverChangeOfYear(){
+	public void callCostOverChangeOfYear(){
 
 		newTest
 			.withACustomerNamed(CARLY_SIMON).withPhoneNumber(CARLY_SIMON_PHONE_NUM).andPricePlan(STANDARD_TARIFF)
@@ -183,7 +183,7 @@ public class BillingSystemTest {
 	
 	//Tests what happens if a CallEnd event is earlier than a CallStart event. Call cost should be 0.0
 	@Test
-	public void checkCallEndBeforeCallStart(){
+	public void callEndBeforeCallStart(){
 
 		newTest
 			.withACustomerNamed(CARLY_SIMON).withPhoneNumber(CARLY_SIMON_PHONE_NUM).andPricePlan(STANDARD_TARIFF)
@@ -197,7 +197,7 @@ public class BillingSystemTest {
 	//Tests what happens if a CallStart event and the next CallEnd event have different Callee numbers
 	//The result is that the cost is calculated which is wrong
 	@Test
-	public void checkCallStartWithCallEndToAnotherNumber(){
+	public void callStartWithCallEndToAnotherNumber(){
 
 		newTest
 			.withACustomerNamed(CARLY_SIMON).withPhoneNumber(CARLY_SIMON_PHONE_NUM).andPricePlan(STANDARD_TARIFF)
@@ -210,7 +210,7 @@ public class BillingSystemTest {
 	//Tests what happens if the Tariff of a customer changes after he has made a call
 	//The cost of all previous calls is calculated with the new Tariff which is wrong
 	@Test
-	public void checkWhatHappensIfTariffChanges(){
+	public void tariffChanges(){
 		newTest
 			.withACustomerNamed(CARLY_SIMON).withPhoneNumber(CARLY_SIMON_PHONE_NUM).andPricePlan(STANDARD_TARIFF)
 			.withACallAt("01/01/11 05:00:00").fromCaller(CARLY_SIMON_PHONE_NUM).toCallee(ELTON_JOHN_PHONE_NUM).thatLastsForSeconds(60)
@@ -221,7 +221,7 @@ public class BillingSystemTest {
 	//Tests what happens if the Tariff of a customer changes after he has made a call
 	//The cost of all previous calls is calculated with the new peak times which is wrong
 	@Test
-	public void checkWhatHappensIfPeakTimesChanges(){
+	public void peakTimesChanges(){
 		newTest
 			.withACustomerNamed(CARLY_SIMON).withPhoneNumber(CARLY_SIMON_PHONE_NUM).andPricePlan(STANDARD_TARIFF)
 			.withACallAt("01/01/11 08:00:00").fromCaller(CARLY_SIMON_PHONE_NUM).toCallee(ELTON_JOHN_PHONE_NUM).thatLastsForSeconds(60)
@@ -237,7 +237,7 @@ public class BillingSystemTest {
 	
 	//Tests what happens if a CallStart event and the next CallEnd event have different Caller numbers and the same Callee
 	@Test
-	public void checkCallStartWithADifferentNumberAndCallEndWithTheSame(){
+	public void startWithADifferentNumberAndCallEndWithTheSame(){
 
 		newTest
 			.withACustomerNamed(CARLY_SIMON).withPhoneNumber(CARLY_SIMON_PHONE_NUM).andPricePlan(STANDARD_TARIFF)
@@ -252,7 +252,7 @@ public class BillingSystemTest {
 	
 	//Tests the cost for a call that lasts only one seconds. Call cost should be 0.0
 	@Test
-	public void checkCostOfOffPeakCallThatLastsOneSecond(){
+	public void costOfOffPeakCallThatLastsOneSecond(){
 
 		newTest
 			.withACustomerNamed(CARLY_SIMON).withPhoneNumber(CARLY_SIMON_PHONE_NUM).andPricePlan(STANDARD_TARIFF)
