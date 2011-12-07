@@ -9,6 +9,8 @@ import org.joda.time.DateTime;
 import com.acmetelecom.Call;
 import com.acmetelecom.CallEndInterface;
 import com.acmetelecom.CallStartInterface;
+import com.acmetelecom.customer.CentralCustomerDatabase;
+import com.acmetelecom.customer.CentralTariffDatabase;
 
 
 public class CallTest{
@@ -27,7 +29,7 @@ public class CallTest{
 		callStart = context.mock(CallStartInterface.class);
 		callEnd = context.mock(CallEndInterface.class);
 		call = new Call(callStart, callEnd);
-		billingSystem = new BillingSystem();
+		billingSystem = new BillingSystem(CentralCustomerDatabase.getInstance(), CentralTariffDatabase.getInstance(), new BillGenerator());
 		
 		//Peak & Off Peak periods for the tests
 		DaytimePeakPeriod.PEAK_RATE_START_TIME = 7;
@@ -102,4 +104,5 @@ public class CallTest{
 		
 		assertEquals(offPeakSeconds,call.durationOffPeakSeconds());
 	}
+	
 }

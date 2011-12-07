@@ -1,5 +1,12 @@
 package com.acmetelecom;
 
+import java.io.FileInputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
 import com.acmetelecom.customer.CentralCustomerDatabase;
 import com.acmetelecom.customer.CentralTariffDatabase;
 import com.acmetelecom.customer.Customer;
@@ -8,12 +15,6 @@ import com.acmetelecom.customer.Tariff;
 import com.acmetelecom.customer.TariffLibrary;
 import com.acmetelecom.logcall.CallFrom;
 import com.acmetelecom.logcall.CallLogInterface;
-
-
-import java.io.FileInputStream;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.*;
 
 public class BillingSystem implements CallLogInterface{
 
@@ -25,13 +26,18 @@ public class BillingSystem implements CallLogInterface{
     static final String PEAK_RATE_START_TIME = "peak_rate_start";
 	static final String OFF_PEAK_RATE_START_TIME = "off-peak_rate_start";
     
-    public BillingSystem(){
-    	this.centralCustomerDatabase = CentralCustomerDatabase.getInstance();
+	@Deprecated
+	/*
+	 * This constructor has been replaced by BillingSystem(CustomerDatabase, TariffLibrary, BillGeneratorInterface)
+	 * The old constructor is needed only to maintain backwards compatibility
+	 */
+	public BillingSystem(){
+		this.centralCustomerDatabase = CentralCustomerDatabase.getInstance();
     	this.centralTariffDatabase = CentralTariffDatabase.getInstance();
     	this.billGenerator = new BillGenerator();
     	loadConfigurationProperties();
-    }
-    
+	}
+	
 	public BillingSystem(CustomerDatabase customerDB, TariffLibrary tariffDB, BillGeneratorInterface billGen){
     	this.centralCustomerDatabase = customerDB;
     	this.centralTariffDatabase = tariffDB;
@@ -70,7 +76,6 @@ public class BillingSystem implements CallLogInterface{
 		DaytimePeakPeriod.PEAK_RATE_START_TIME = Integer.parseInt(peak_rate_start);
 	}
     
-    
     //DSL Start call methods
     public CallFrom startCall(){
     	return new LogCallStart(this);
@@ -82,7 +87,7 @@ public class BillingSystem implements CallLogInterface{
     
     @Deprecated
     /*
-     * This method has been replace by the new DSL startCall() method
+     * This method has been replaced by the new DSL startCall() method
      */
     public void callInitiated(String caller, String callee) {
         callLog.add(new CallStart(caller, callee));
@@ -90,7 +95,7 @@ public class BillingSystem implements CallLogInterface{
     
     @Deprecated
     /*
-     * This method has been replace by the new DSL startCall() method
+     * This method has been replaced by the new DSL startCall() method
      */
     public void callInitiated(String caller, String callee, long timeStamp) {
         callLog.add(new CallStart(caller, callee, timeStamp));
@@ -98,7 +103,7 @@ public class BillingSystem implements CallLogInterface{
 
     @Deprecated 
     /*
-     * This method has been replace by the new DSL endCall() method
+     * This method has been replaced by the new DSL endCall() method
      */
     public void callCompleted(String caller, String callee) {
         callLog.add(new CallEnd(caller, callee));
@@ -106,7 +111,7 @@ public class BillingSystem implements CallLogInterface{
     
     @Deprecated 
     /*
-     * This method has been replace by the new DSL endCall() method
+     * This method has been replaced by the new DSL endCall() method
      */
     public void callCompleted(String caller, String callee, long timeStamp) {
         callLog.add(new CallEnd(caller, callee, timeStamp));
