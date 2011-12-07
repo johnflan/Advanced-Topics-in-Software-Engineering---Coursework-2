@@ -4,20 +4,20 @@ import com.acmetelecom.logcall.LogCall;
 
 public class EndCall extends LogCall {
 
-	public EndCall(BillingSystem billingSystem) {
+	public EndCall(CallLogInterface billingSystem) {
 		super(billingSystem);
 	}
-
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void placeCallWithoutTimestamp() {
-		billingSystem.callCompleted(super.caller, super.callee);
+		callLogger.callCompleted(super.caller, super.callee);
 
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void placeCallWithTimestamp() {
-		billingSystem.callCompleted(super.caller, super.callee, super.timeStamp);
+		callLogger.callCompleted(super.caller, super.callee, super.timeStamp);
 	}
 
 }

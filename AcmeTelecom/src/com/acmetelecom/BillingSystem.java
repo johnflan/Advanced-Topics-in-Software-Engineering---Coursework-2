@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 
-public class BillingSystem {
+public class BillingSystem implements CallLogInterface{
 
     private List<CallEvent> callLog = new ArrayList<CallEvent>();
     private final CustomerDatabase centralCustomerDatabase;
@@ -22,7 +22,7 @@ public class BillingSystem {
     private final iBillGenerator billGenerator;
     
     static final String PEAK_RATE_START_TIME = "peak_rate_start";
-	  static final String OFF_PEAK_RATE_START_TIME = "off-peak_rate_start";
+	static final String OFF_PEAK_RATE_START_TIME = "off-peak_rate_start";
     
     public BillingSystem(){
     	this.centralCustomerDatabase = CentralCustomerDatabase.getInstance();

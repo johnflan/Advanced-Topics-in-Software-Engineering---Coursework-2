@@ -4,19 +4,21 @@ import com.acmetelecom.logcall.LogCall;
 
 public class StartCall extends LogCall{
 	
-    public StartCall(BillingSystem billingSystem) {
+    public StartCall(CallLogInterface billingSystem) {
 		super(billingSystem);
 	}
-
+    
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void placeCallWithoutTimestamp() {
-		billingSystem.callInitiated(super.caller, super.callee);
+		callLogger.callInitiated(super.caller, super.callee);
 		
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void placeCallWithTimestamp() {
-		billingSystem.callInitiated(super.caller, super.callee, super.timeStamp);		
+		callLogger.callInitiated(super.caller, super.callee, super.timeStamp);		
 	}
 
 	

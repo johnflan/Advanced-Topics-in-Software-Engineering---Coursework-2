@@ -40,10 +40,10 @@
 	</p>
 	<p>
 		Given the following phone calls:
-		<table concordion:execute="createCallEntry(#fromNo, #toNo, #startTime, #duration)">
+		<table concordion:execute="createCallEntry(#caller, #callee, #startTime, #duration)">
 			<tr>
-				<th concordion:set="#fromNo">From Number</th>
-				<th concordion:set="#toNo">To Number</th>
+				<th concordion:set="#caller">From Number</th>
+				<th concordion:set="#callee">To Number</th>
 				<th concordion:set="#startTime">Start time</th>
 				<th concordion:set="#duration">Duration (min)</th>
 				<th concordion:set="#description">Description</th>

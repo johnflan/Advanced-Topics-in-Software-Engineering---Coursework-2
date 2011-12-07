@@ -16,7 +16,7 @@ import org.concordion.integration.junit3.ConcordionTestCase;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import com.acmetelecom.BillingSystem;
-import com.acmetelecom.TestBillGenerator;
+import com.acmetelecom.BillGeneratorDummy;
 import com.acmetelecom.iBillGenerator;
 import com.acmetelecom.iCall;
 import com.acmetelecom.customer.Customer;
@@ -45,7 +45,7 @@ public class BillingSystemSpec extends ConcordionTestCase {
 		customerDatabase = context.mock(CustomerDatabase.class);
 		tariffLibrary = context.mock(TariffLibrary.class);
 		//billGenerator = context.mock(iBillGenerator.class);
-		billGenerator = new TestBillGenerator();
+		billGenerator = new BillGeneratorDummy();
 	}
 	
 	public void initialiseStandardTariff() {
@@ -73,7 +73,7 @@ public class BillingSystemSpec extends ConcordionTestCase {
 		customerList.add(new Customer(name, number, plan));
 	}
 	
-	public void createCallEntry(String fromNo, String toNo, String startTime, String duration){
+	public void createCallEntry(String caller, String callee, String startTime, String duration){
 		//calculate timestamp
 		int hour = Integer.parseInt(startTime.substring(0, 2));
 		int minute = Integer.parseInt(startTime.substring(3, 5));
@@ -81,8 +81,8 @@ public class BillingSystemSpec extends ConcordionTestCase {
 		long callStartTime = (hour * 60 * 60 * 1000) + (minute * 60 * 1000);
 		long callEndTime = callStartTime + (durationMinutes * 60 * 1000);
 
-		billingSystem.startCall().atTime(callStartTime).from(fromNo).to(toNo);
-		billingSystem.endCall().atTime(callEndTime).from(fromNo).to(toNo);
+		billingSystem.startCall().atTime(callStartTime).from(caller).to(callee);
+		billingSystem.endCall().atTime(callEndTime).from(caller).to(callee);
 	}
 	
 	public void initialiseBillingSystem(){
@@ -96,9 +96,8 @@ public class BillingSystemSpec extends ConcordionTestCase {
 		}});
 		
 		billingSystem.createCustomerBills();
-		
 		context.assertIsSatisfied();
-		totalBill = ((TestBillGenerator) billGenerator).getTotals();
+		totalBill = ((BillGeneratorDummy) billGenerator).getTotals();
 	}
 	
 	public String getTotalCostsFor(String custName, String telNo){

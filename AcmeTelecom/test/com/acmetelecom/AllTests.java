@@ -6,7 +6,8 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({ BillingSystemTest.class, CallTest.class,
-		DatetimePeakPeriodTest.class, MoneyFormatterTest.class })
+		DatetimePeakPeriodTest.class, MoneyFormatterTest.class, LogCallTest.class,
+		BillGeneratorTest.class })
 public class AllTests {
 
 }

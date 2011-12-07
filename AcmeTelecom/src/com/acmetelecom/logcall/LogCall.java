@@ -1,18 +1,19 @@
 package com.acmetelecom.logcall;
 
 import com.acmetelecom.BillingSystem;
+import com.acmetelecom.CallLogInterface;
 
 public abstract class LogCall implements CallFrom, CallFromTo {
 	
-	final protected BillingSystem billingSystem;
+	final protected CallLogInterface callLogger;
 	
 	protected long timeStamp;
 	protected String caller;
 	protected String callee;
 	protected boolean timeStampSet = false;
 	
-	public LogCall(BillingSystem billingSystem){
-		this.billingSystem = billingSystem;
+	public LogCall(CallLogInterface  callLogger){
+		this.callLogger = callLogger;
 	}
 
 	@Override
