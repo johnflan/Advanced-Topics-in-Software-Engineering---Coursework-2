@@ -527,18 +527,5 @@ public class BillingSystemTest {
 		
 		return String.format("%.2f", peakCost.add(offPeakCost).setScale(0, RoundingMode.HALF_UP).divide(new BigDecimal(100)).doubleValue());
 	}
-	
-	
-	//Classes needed to add fake calls in the log
-	private class FakeCallStart extends CallEvent implements CallStartInterface{
-		public FakeCallStart(String caller, String callee, long fakeMillis) {
-			super(caller, callee, fakeMillis);
-		}
-	}
-	private class FakeCallEnd extends CallEvent implements CallEndInterface{
-		public FakeCallEnd(String caller, String callee, long fakeMillis) {
-			super(caller, callee, fakeMillis);
-		}
-	}
 
 }
