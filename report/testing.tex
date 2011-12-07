@@ -22,7 +22,31 @@ An evolution of the FIT concept, Concordion utilises the JUnit framework for exe
 
 After evaluation of the available acceptance testing tooling, we concluded that Concordion best fulfilled the requirements of the project. 
 
-Implementation of the test fixtures required that some modifications be made to the code. These changes we necessary due to the BillingSystem being tightly coupled with BillGenerator.  It was necessary to create a second constructor in the BillingSystem to pass a reference to a BillGenerator. This enabled the fixture to access the results of the call cost calculations and confirm their correctness. Changes like this were also necessary for the CustomerDatabase and TariffDatabase. 
+Implementation of the test fixtures required that some modifications be made to the code. These changes were necessary due to the BillingSystem being tightly coupled with BillGenerator. It was necessary to create a second constructor in the BillingSystem to pass a reference to a BillGenerator. This enabled the fixture to access the results of the call cost calculations and confirm their correctness. Changes like this were also necessary for the CustomerDatabase and TariffDatabase. 
 
 
 \subsection{Unit Testing}
+
+Due to the critical nature of the Billing System it is important to ensure regressions are not introduced during development. Before beginning feature development we implemented unit tests across much of the code, this also was helpful for the developers to become familiar with the code-base. Having this test coverage will enable the team to move more quickly and confidently in a test driven framework with the feature development.
+
+Several unit testing frameworks are popular for Java e.g. JUnit and TestNG. These frameworks are quite similar, TestNG having the ability to execute tests in groups and begin slightly more configurable. Due to the teams experience with JUnit and the fact that Concordion integrates with it, JUnit was selected. In addition to the use of JUnit tests we also required a mechanism to ensure that the object under test is calling the correct methods on its dependency's, and to inject test data from those requests. The team members have had good previous experience using JMock and we employed its use in our testing infrastructure.
+
+\subsubsection{Unit test implementation}
+In order to test some some methods it was necessary to provide mock or dummy objects for classes that we did not wish to include in the test. This mocking out of extra functionality enabled more focused and comprehensive testing.
+
+For example in our testing of the BillingSystem.createCustomerBill(), there was an internal call to BillGenerator. We needed to ensure that BillGenerator was called, and confirm that it was called with the correct parameters but not execute any of its functionality. This type of testing resulted in us creating interfaces for many of the classes we were provided with. For the above example we created the BillGeneratorInterface for the corresponding BillGenerator.
+
+Because the code we were provided contained a large portion of its functionality in a compiled JAR, was impossible to create interfaces for the Customer and Tariff types. In this case we created instances of these objects in the unit test and confirmed with JMock that they were being processed correctly.
+
+During the initial unit testing we found several problems with the program’s logic:
+
+\begin{enumerate}
+	\item If there are two customers with the same telephone in the database and one of them makes a call, then they are both charged for the call (according to their price plan).
+	\item If someone calls himself then he is charged for the call.
+	\item If there is a CallStart event from a customer A to the customer B followed by a CallEnd event from customer A to customer C, then customer A is charged for the time between the two events.
+	\item If a customer’s price plan changes, then he is charged based on the new price plan for the previous calls he has made, because all call costs are calculated after the change and not when the call has been made.
+	\item If the peak and off peak hours are changed while the system is running (there are calls stored in the call log), then the call costs will be calculated based on the new peak/off peak periods.
+\end{enumerate}
+
+Once the team was happy with the coverage of the test for the unmodified code, the unit tests were expanded to include the new cases that would occur because of the new feature. 
+

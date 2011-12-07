@@ -1,0 +1,56 @@
+\section{Additional Changes}
+
+\subsection{DSL like logging interface}
+During development it was found that the callInitiated() and callComplete() methods in the Billing System were prone to error. It was easy for a developer to initialise the call in the wrong order i.e. callInitiated(callee, caller), creating major billing issues.
+
+To combat this we redesigned the call logging interface. This new interface relies on the autocompletion features of modern IDE’s by returning the ‘this’ value cast to a particular interface. With this we used domain specific language to create interface.
+\begin{lstlisting}
+	billingSystem.startCall().from(caller).to(callee);
+\end{lstlisting}
+To implement this feature a CallLogInterface interface was created, and the BillingSystem implemented this ‘role’. The startCall() method creates a new object which builds the data necessary to log an entry, and calls the callInitiated() method of BillingSystem.
+
+To direct new users to this interface and maintain backwards compatibility we added Javadoc and the @deprecated annotation to the callInitiated()  and callComplete() methods. It would have been possible to go even further an create mini-types for the call data, but we felt this would have been too great of a change for this release.
+
+\subsection{Externalise configuration parameters}
+In order for the values for the peak and off-peak times to be easily modified these where externalised to a properties file. An external properties file was created to store keys for peak\_start\_time and off-peak\_start\_time. These times can be changed in the future simply by editing the properties file.
+
+The file is loaded through a loadConfigurationProperties() method that is called in the constructor of the BillingSystem class. 
+
+\begin{lstlisting}
+props.load(new FileInputStream("billing_system.properties"));
+if(props.containsKey(PEAK_RATE_START_TIME))
+	peak_rate_start = props.getProperty(PEAK_RATE_START_TIME);	if(props.containsKey(OFF_PEAK_RATE_START_TIME))
+     	off_peak_rate_start = props.getProperty(OFF_PEAK_RATE_START_TIME);
+if (off_peak_rate_start == null || peak_rate_start == null)
+	throw new Exception("Configuration error!");	
+\end{lstlisting}
+
+Moving these and future values to a configuration file will enable the business to be more responsive and cost effective.
+
+\subsection{More comprehensive time framework}
+Refactoring the code to implement the changes was difficult using the standard JDK Date library. Because of that, other libraries were researched for implementing dates and times in Java more effectively. We found some external libraries built especially to solve problems with the standard classes like Date4j and JodaTime. After some evaluations of the two libraries we decided that the JodaTime Project that provides a quality replacement for the internal Date and Time classes. It supports all the methods that already exist in the JDK Date but provides even more features and useful types. Additionally, there are conversion methods between the JDK class Date and the JodaTime DateTime type. JodaTime has been designed to fix numerous bugs that exist in the JDK classes date and time and also to improve performance. A great advantage of using the JodaTime is that it enables much easier testing with various methods. 
+
+An example of using JodaTime DateTime:
+\begin{lstlisting}
+	DateTime dtStartCall=new DateTime(); //new DateTime with the current time. 
+	CallStart callStart = new CallStart(phone1, phone2, dtStartCall);
+	CallEnd callEnd = new CallEnd(phone1, phone2, dtStartCall.plusSeconds(250));
+\end{lstlisting}
+
+Lastly, we made sure that this library is safe to be used in the system in terms of maturity. Under active development since 2002 (last release was in June this year) and it continues to receive new features and bug-fixes. Some other helpful classes and methods included in the JodaTime project are described next.
+
+\subsubsection{Duration between two dates}
+Using the Duration class included in the JodaTime project we can easially calculate the duration between two DateTime instances. Included in the Duration class, are various methods, that return the duration of the two dates in days, hours, seconds and milliseconds. An example of returning the seconds between two dates is showed below:
+\begin{lstlisting}
+	Duration callDuration=new Duration(dtStartCall, dtEndCall);
+	int durationInSeconds=callDuration.getStandardSeconds();
+\end{lstlisting}
+
+\subsubsection{Integration of JodaTime}
+Some modifications to the system had to be done in order for the standard dates to be replaced by the DateTime types. A number of them were made to the Call.java class where were Dates for the startTime and endTime of the call were being returned. Another necessary modification applied was in the DaytimePeakPeriod in order for the offPeak method to accept DateTime argument instead of the standard JDK Date type.
+\begin{lstlisting}
+public boolean offPeak(DateTime time) {     
+	int hour = time.getHourOfDay();
+	return hour < peak_rate_start || hour >= off_peak_rate_start;
+}
+\end{lstlisting}
