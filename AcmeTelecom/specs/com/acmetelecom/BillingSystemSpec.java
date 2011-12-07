@@ -13,8 +13,6 @@ import org.concordion.integration.junit3.ConcordionTestCase;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.joda.time.DateTime;
-import org.joda.time.Duration;
-import org.joda.time.Interval;
 
 import com.acmetelecom.BillingSystem;
 import com.acmetelecom.BillGeneratorDummy;
